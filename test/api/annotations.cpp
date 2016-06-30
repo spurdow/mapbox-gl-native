@@ -64,6 +64,27 @@ TEST(Annotations, LineAnnotation) {
     test.checkRendering("line_annotation_max_zoom");
 }
 
+TEST(Annotations, AnnotationZoomRange) {
+    AnnotationTest test;
+
+    LineString<double> line = {{ { 0, 0 }, { 45, 45 } }};
+    LineAnnotation annotation { line };
+
+    test.map.setStyleJSON(util::read_file("test/fixtures/api/empty.json"));
+    test.map.addAnnotation(annotation);
+
+    const auto pixel = test.map.pixelForLatLng({ 0, 0 });
+    const uint8_t maxZoom = test.map.getMaxZoom();
+    for (uint8_t zoom = test.map.getMinZoom(); zoom <= maxZoom; ++zoom) {
+        test.map.setZoom(zoom);
+        test::render(test.map);
+        const auto features = test.map.queryRenderedFeatures(pixel);
+        if (features.empty()) {
+            printf("zoom: %lf (empty)\n", test.map.getZoom());
+        }
+    }
+}
+
 TEST(Annotations, FillAnnotation) {
     AnnotationTest test;
 

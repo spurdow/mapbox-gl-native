@@ -87,12 +87,10 @@ private:
 };
 
 void ShapeAnnotationImpl::updateTileData(const CanonicalTileID& tileID, AnnotationTileData& data) {
-    static const double baseTolerance = 4;
+    const uint64_t maxAmountOfTileFeatures = (1ull << maxZoom) * util::EXTENT;
+    const double tolerance = 4 / maxAmountOfTileFeatures;
 
     if (!shapeTiler) {
-        const uint64_t maxAmountOfTileFeatures = (1ull << maxZoom) * util::EXTENT;
-        const double tolerance = baseTolerance / maxAmountOfTileFeatures;
-
         std::vector<geojsonvt::ProjectedFeature> features = {
             ShapeAnnotationGeometry::visit(geometry(), ToGeoJSONVT(tolerance))
         };
@@ -101,7 +99,7 @@ void ShapeAnnotationImpl::updateTileData(const CanonicalTileID& tileID, Annotati
         options.maxZoom = maxZoom;
         options.buffer = 255u;
         options.extent = util::EXTENT;
-        options.tolerance = baseTolerance;
+        options.tolerance = tolerance;
         shapeTiler = std::make_unique<mapbox::geojsonvt::GeoJSONVT>(features, options);
     }
 
@@ -123,6 +121,9 @@ void ShapeAnnotationImpl::updateTileData(const CanonicalTileID& tileID, Annotati
         }
 
         assert(featureType != FeatureType::Unknown);
+
+        const auto& ring = shapeFeature.tileGeometry.get<geojsonvt::TileRings>().front();
+        printf("shapeFeature.tileGeometry.shapeRing.size: %u\n", uint32_t(ring.size()));
 
         GeometryCollection renderGeometry;
         for (const auto& shapeRing : shapeFeature.tileGeometry.get<geojsonvt::TileRings>()) {

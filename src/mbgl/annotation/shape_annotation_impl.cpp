@@ -106,13 +106,14 @@ void ShapeAnnotationImpl::updateTileData(const CanonicalTileID& tileID, Annotati
     }
 
     const auto& shapeTile = shapeTiler->getTile(tileID.z, tileID.x, tileID.y);
-    if (!shapeTile)
+    if (!shapeTile) {
         return;
+    }
 
     AnnotationTileLayer& layer = *data.layers.emplace(layerID,
         std::make_unique<AnnotationTileLayer>(layerID)).first->second;
 
-    for (auto& shapeFeature : shapeTile.features) {
+    for (const auto& shapeFeature : shapeTile.features) {
         FeatureType featureType = FeatureType::Unknown;
 
         if (shapeFeature.type == geojsonvt::TileFeatureType::LineString) {
@@ -124,10 +125,10 @@ void ShapeAnnotationImpl::updateTileData(const CanonicalTileID& tileID, Annotati
         assert(featureType != FeatureType::Unknown);
 
         GeometryCollection renderGeometry;
-        for (auto& shapeRing : shapeFeature.tileGeometry.get<geojsonvt::TileRings>()) {
+        for (const auto& shapeRing : shapeFeature.tileGeometry.get<geojsonvt::TileRings>()) {
             GeometryCoordinates renderLine;
 
-            for (auto& shapePoint : shapeRing) {
+            for (const auto& shapePoint : shapeRing) {
                 renderLine.emplace_back(shapePoint.x, shapePoint.y);
             }
 

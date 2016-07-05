@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.  Please read [CON
 
 ## master
 
+* Added a method to MGLMapViewDelegate, `-mapView:shouldChangeFromCamera:toCamera:`, that you can implement to restrict which parts the user can navigate to using gestures. ([#5584](https://github.com/mapbox/mapbox-gl-native/pull/5584))
+
 ## 3.3.0
 
 ### Styles and data

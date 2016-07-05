@@ -1189,6 +1189,8 @@ mbgl::Duration MGLDurationInSeconds(NSTimeInterval duration)
 
     _mbglMap->cancelTransitions();
 
+    MGLMapCamera *oldCamera = self.camera;
+    BOOL didChangeCamera = NO;
     if (pan.state == UIGestureRecognizerStateBegan)
     {
         [self trackGestureEvent:MGLEventGesturePanStart forRecognizer:pan];
@@ -1202,6 +1204,7 @@ mbgl::Duration MGLDurationInSeconds(NSTimeInterval duration)
         CGPoint delta = [pan translationInView:pan.view];
         _mbglMap->moveBy({ delta.x, delta.y });
         [pan setTranslation:CGPointZero inView:pan.view];
+        didChangeCamera = YES;
 
         [self notifyMapChange:mbgl::MapChangeRegionIsChanging];
     }
@@ -1233,6 +1236,13 @@ mbgl::Duration MGLDurationInSeconds(NSTimeInterval duration)
             MGLEventKeyLongitude: @(panCoordinate.longitude),
             MGLEventKeyZoomLevel: @(zoom)
         }];
+    }
+    
+    if (didChangeCamera
+        && [self.delegate respondsToSelector:@selector(mapView:shouldChangeFromCamera:toCamera:)]
+        && ![self.delegate mapView:self shouldChangeFromCamera:oldCamera toCamera:self.camera])
+    {
+        self.camera = oldCamera;
     }
 }
 

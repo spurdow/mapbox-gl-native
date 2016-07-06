@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.  Please read [CON
 
 ## master
 
+* Added a property to MGLOfflineStorage, `countOfBytesCompleted`, that indicates the disk space occupied by all cached and offline resources. ([#5585](https://github.com/mapbox/mapbox-gl-native/pull/5585))
+
 ## 3.3.0
 
 ### Styles and data

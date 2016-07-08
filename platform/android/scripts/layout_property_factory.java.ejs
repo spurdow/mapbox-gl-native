@@ -1,0 +1,15 @@
+<%
+  const properties = locals.properties;
+-%>
+// This file is generated. Do not edit.
+package com.mapbox.mapboxsdk.style.properties;
+
+public class LayoutPropertyFactory {
+
+<% for (const property of properties) { -%>
+    public static LayoutProperty<<%- property.type == "enum" ? "String" : propertyType(property) %>> <%- camelizeWithLeadingLowercase(property.name) %>(<%- iff(() => property.type == "enum", "@") %><%- propertyType(property) %><%- iff(() => property.type == "enum", " String") %> value) {
+        return new LayoutProperty<>("<%-  property.name %>", value);
+    }
+
+<% } -%>
+}

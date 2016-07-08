@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.geometry.ProjectedMeters;
 import com.mapbox.mapboxsdk.layers.CustomLayer;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
+import com.mapbox.mapboxsdk.style.properties.LayoutProperty;
 
 import java.util.List;
 
@@ -470,6 +471,12 @@ final class NativeMapView {
         return nativeGetCameraValues(mNativeMapViewPtr);
     }
 
+    // Runtime style Api
+
+    public void setLayoutProperty(String layerId, LayoutProperty<?> property) {
+        nativeSetLayoutProperty(mNativeMapViewPtr, layerId, property.name, property.value);
+    }
+
     //
     // Callbacks
     //
@@ -633,7 +640,7 @@ final class NativeMapView {
     private native LatLng nativeLatLngForPixel(long nativeMapViewPtr, PointF pixel);
 
     private native double nativeGetTopOffsetPixelsForAnnotationSymbol(long nativeMapViewPtr, String symbolName);
-    
+
     private native void nativeJumpTo(long nativeMapViewPtr, double angle, double latitude, double longitude, double pitch, double zoom);
 
     private native void nativeEaseTo(long nativeMapViewPtr, double angle, double latitude, double longitude, long duration, double pitch, double zoom, boolean easingInterpolator);
@@ -645,4 +652,6 @@ final class NativeMapView {
     private native void nativeRemoveCustomLayer(long nativeMapViewPtr, String id);
 
     private native double[] nativeGetCameraValues(long mNativeMapViewPtr);
+
+    private native void nativeSetLayoutProperty(long mNativeMapViewPtr, String layerId, String name, Object value);
 }

@@ -40,6 +40,7 @@ import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.layers.CustomLayer;
 import com.mapbox.mapboxsdk.maps.widgets.MyLocationViewSettings;
+import com.mapbox.mapboxsdk.style.properties.LayoutProperty;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -1651,6 +1652,11 @@ public class MapboxMap {
     @UiThread
     public void snapshot(@NonNull SnapshotReadyCallback callback) {
         mMapView.snapshot(callback, null);
+    }
+
+    @UiThread
+    public void setLayoutProperty(String layerId, LayoutProperty<?> property) {
+        mMapView.setLayoutProperty(layerId, property.name, property.value);
     }
 
     //

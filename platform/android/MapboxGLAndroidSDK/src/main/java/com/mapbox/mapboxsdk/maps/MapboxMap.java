@@ -40,7 +40,7 @@ import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.layers.CustomLayer;
 import com.mapbox.mapboxsdk.maps.widgets.MyLocationViewSettings;
-import com.mapbox.mapboxsdk.style.properties.LayoutProperty;
+import com.mapbox.mapboxsdk.style.layers.Layer;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -102,6 +102,14 @@ public class MapboxMap {
         mSelectedMarkers = new ArrayList<>();
         mInfoWindows = new ArrayList<>();
         mMarkerViewManager = new MarkerViewManager(this, mapView);
+    }
+
+    // Style
+
+    @Nullable
+    @UiThread
+    public Layer getLayer(@NonNull String layerId) {
+        return getMapView().getNativeMapView().getLayer(layerId);
     }
 
     //
@@ -1652,11 +1660,6 @@ public class MapboxMap {
     @UiThread
     public void snapshot(@NonNull SnapshotReadyCallback callback) {
         mMapView.snapshot(callback, null);
-    }
-
-    @UiThread
-    public void setLayoutProperty(String layerId, LayoutProperty<?> property) {
-        mMapView.setLayoutProperty(layerId, property.name, property.value);
     }
 
     //

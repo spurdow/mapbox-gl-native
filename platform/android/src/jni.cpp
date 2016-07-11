@@ -1085,6 +1085,10 @@ void nativeRemoveCustomLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapView
     nativeMapView->getMap().removeLayer(std_string_from_jstring(env, id));
 }
 
+void nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, jni::jstring* id) {
+    //TODO
+}
+
 // Offline calls begin
 
 jlong createDefaultFileSource(JNIEnv *env, jni::jobject* obj, jni::jstring* cachePath_, jni::jstring* assetRoot_, jlong maximumCacheSize) {
@@ -1696,6 +1700,7 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
         MAKE_NATIVE_METHOD(nativeFlyTo, "(JDDDJDD)V"),
         MAKE_NATIVE_METHOD(nativeAddCustomLayer, "(JLcom/mapbox/mapboxsdk/layers/CustomLayer;Ljava/lang/String;)V"),
         MAKE_NATIVE_METHOD(nativeRemoveCustomLayer, "(JLjava/lang/String;)V"),
+        MAKE_NATIVE_METHOD(nativeGetLayer, "(JLjava/lang/String;)Lcom/mapbox/mapboxsdk/style/layers/Layer;"),
         MAKE_NATIVE_METHOD(nativeSetContentPadding, "(JDDDD)V")
     );
 

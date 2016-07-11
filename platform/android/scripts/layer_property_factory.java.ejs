@@ -1,0 +1,22 @@
+<%
+  const properties = locals.properties;
+-%>
+// This file is generated. Do not edit.
+package com.mapbox.mapboxsdk.style.layers;
+
+import android.support.annotation.ColorInt;
+
+/**
+ * Constructs paint/layout properties for Layers
+ * @see <a href="https://www.mapbox.com/mapbox-gl-style-spec/#layers>Layer style documentation</a>
+ *
+ */
+public class PropertyFactory {
+
+<% for (const property of properties) { -%>
+    public static Property<<%- propertyType(property) %>> <%- camelizeWithLeadingLowercase(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
+        return new Property<>("<%-  property.name %>", value);
+    }
+
+<% } -%>
+}

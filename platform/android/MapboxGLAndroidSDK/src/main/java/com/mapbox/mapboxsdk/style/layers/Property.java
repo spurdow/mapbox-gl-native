@@ -1,12 +1,15 @@
 // This file is generated. Do not edit.
-package com.mapbox.mapboxsdk.style.properties;
+package com.mapbox.mapboxsdk.style.layers;
 
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class LayoutProperty<T> {
+/**
+ * Paint/Layout propertie for Layer
+ */
+public class Property<T> {
 
     //line-cap
     public static final String LINE_CAP_BUTT = "butt";
@@ -144,11 +147,66 @@ public class LayoutProperty<T> {
     @Retention(RetentionPolicy.SOURCE)
     public @interface TEXT_TRANSFORM {}
 
+    //fill-translate-anchor
+    public static final String FILL_TRANSLATE_ANCHOR_MAP = "map";
+    public static final String FILL_TRANSLATE_ANCHOR_VIEWPORT = "viewport";
+
+    @StringDef({
+            FILL_TRANSLATE_ANCHOR_MAP,
+            FILL_TRANSLATE_ANCHOR_VIEWPORT,
+        })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface FILL_TRANSLATE_ANCHOR {}
+
+    //line-translate-anchor
+    public static final String LINE_TRANSLATE_ANCHOR_MAP = "map";
+    public static final String LINE_TRANSLATE_ANCHOR_VIEWPORT = "viewport";
+
+    @StringDef({
+            LINE_TRANSLATE_ANCHOR_MAP,
+            LINE_TRANSLATE_ANCHOR_VIEWPORT,
+        })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface LINE_TRANSLATE_ANCHOR {}
+
+    //icon-translate-anchor
+    public static final String ICON_TRANSLATE_ANCHOR_MAP = "map";
+    public static final String ICON_TRANSLATE_ANCHOR_VIEWPORT = "viewport";
+
+    @StringDef({
+            ICON_TRANSLATE_ANCHOR_MAP,
+            ICON_TRANSLATE_ANCHOR_VIEWPORT,
+        })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ICON_TRANSLATE_ANCHOR {}
+
+    //text-translate-anchor
+    public static final String TEXT_TRANSLATE_ANCHOR_MAP = "map";
+    public static final String TEXT_TRANSLATE_ANCHOR_VIEWPORT = "viewport";
+
+    @StringDef({
+            TEXT_TRANSLATE_ANCHOR_MAP,
+            TEXT_TRANSLATE_ANCHOR_VIEWPORT,
+        })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TEXT_TRANSLATE_ANCHOR {}
+
+    //circle-translate-anchor
+    public static final String CIRCLE_TRANSLATE_ANCHOR_MAP = "map";
+    public static final String CIRCLE_TRANSLATE_ANCHOR_VIEWPORT = "viewport";
+
+    @StringDef({
+            CIRCLE_TRANSLATE_ANCHOR_MAP,
+            CIRCLE_TRANSLATE_ANCHOR_VIEWPORT,
+        })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CIRCLE_TRANSLATE_ANCHOR {}
+
 
     public final String name;
     public final T value;
 
-    /* package */ LayoutProperty(String name, T value) {
+    /* package */ Property(String name, T value) {
         this.name = name;
         this.value = value;
     }

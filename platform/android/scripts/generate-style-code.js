@@ -35,21 +35,33 @@ global.propertyType = function propertyType(property) {
 //    return 'AlignmentType';
 //  }
   switch (property.type) {
-  case 'boolean':
-    return 'Boolean';
-  case 'number':
-    return 'Float';
-  case 'string':
-    return 'String';
-  case 'enum':
-    return `LayoutProperty.${snakeCaseUpper(property.name)}`;
-  case 'color':
-    return `Color`;
-  case 'array':
-    return `${propertyType({type:property.value})}[]`;
-  default: throw new Error(`unknown type for ${property.name}`)
+      case 'boolean':
+        return 'Boolean';
+      case 'number':
+        return 'Float';
+      case 'string':
+        return 'String';
+      case 'enum':
+        return `String`;
+      case 'color':
+        return `Integer`;
+      case 'array':
+        return `${propertyType({type:property.value})}[]`;
+      default:
+        throw new Error(`unknown type for ${property.name}`);
   }
 }
+
+global.propertyTypeAnnotation = function propertyTypeAnnotation(property) {
+  switch (property.type) {
+      case 'enum':
+        return `@Property.${snakeCaseUpper(property.name)}`;
+      case 'color':
+        return `@ColorInt`;
+      default:
+        return "";
+  }
+};
 
 
 //Process Layers
@@ -76,19 +88,24 @@ const layers = spec.layer.type.values.map((type) => {
 });
 
 
-//Process all layout properties
-const layoutProperties = _(layers).map('layoutProperties').flatten().value();
-const layoutPropertyFactoryTemplate = ejs.compile(fs.readFileSync('platform/android/scripts/layout_property_factory.java.ejs', 'utf8'), {strict: true});
+//Process all layer properties
+const properties = _(layers)
+                    .map('layoutProperties')
+                    .flatten()
+                    .union(_(layers).map("paintProperties").flatten().value())
+                    .value();
+
+const propertiesTemplate = ejs.compile(fs.readFileSync('platform/android/scripts/layer_property_factory.java.ejs', 'utf8'), {strict: true});
 fs.writeFileSync(
-    `platform/android/MapboxGLAndroidSDK/src/main/java/com/mapbox/mapboxsdk/style/properties/LayoutPropertyFactory.java`,
-    layoutPropertyFactoryTemplate({properties: layoutProperties})
+    `platform/android/MapboxGLAndroidSDK/src/main/java/com/mapbox/mapboxsdk/style/layers/PropertyFactory.java`,
+    propertiesTemplate({properties: properties})
 );
 
 //Create types for the enum properties
-const layoutEnumProperties = _(layoutProperties).filter({'type': 'enum'}).value();
-const layoutPropertyTemplate = ejs.compile(fs.readFileSync('platform/android/scripts/layout_property.java.ejs', 'utf8'), {strict: true});
+const enumProperties = _(properties).filter({'type': 'enum'}).value();
+const enumPropertyTemplate = ejs.compile(fs.readFileSync('platform/android/scripts/layer_property.java.ejs', 'utf8'), {strict: true});
 fs.writeFileSync(
-    `platform/android/MapboxGLAndroidSDK/src/main/java/com/mapbox/mapboxsdk/style/properties/LayoutProperty.java`,
-    layoutPropertyTemplate({properties: layoutEnumProperties})
+    `platform/android/MapboxGLAndroidSDK/src/main/java/com/mapbox/mapboxsdk/style/layers/Property.java`,
+    enumPropertyTemplate({properties: enumProperties})
 );
 

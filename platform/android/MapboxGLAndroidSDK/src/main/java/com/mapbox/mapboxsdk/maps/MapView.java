@@ -83,7 +83,6 @@ import com.mapbox.mapboxsdk.location.LocationServices;
 import com.mapbox.mapboxsdk.maps.widgets.CompassView;
 import com.mapbox.mapboxsdk.maps.widgets.MyLocationView;
 import com.mapbox.mapboxsdk.maps.widgets.MyLocationViewSettings;
-import com.mapbox.mapboxsdk.style.properties.LayoutProperty;
 import com.mapbox.mapboxsdk.telemetry.MapboxEvent;
 import com.mapbox.mapboxsdk.telemetry.MapboxEventManager;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
@@ -2599,6 +2598,10 @@ public class MapView extends FrameLayout {
         return mMyLocationView;
     }
 
+    NativeMapView getNativeMapView() {
+        return mNativeMapView;
+    }
+
     @UiThread
     void snapshot(@NonNull final MapboxMap.SnapshotReadyCallback callback, @Nullable final Bitmap bitmap) {
 //        TextureView textureView = (TextureView) findViewById(R.id.textureView);
@@ -2614,12 +2617,6 @@ public class MapView extends FrameLayout {
 //        canvas.drawBitmap(content, new Matrix(), null);
 //        callback.onSnapshotReady(output);
         throw new RuntimeException("TextureView code needs to be migrated to SurfaceView");
-    }
-
-
-    @UiThread
-    void setLayoutProperty(String layerId, LayoutProperty<?> property) {
-        mNativeMapView.setLayoutProperty(layerId, property.name, property.value);
     }
 
     //

@@ -2,14 +2,17 @@
   const properties = locals.properties;
 -%>
 // This file is generated. Do not edit.
-package com.mapbox.mapboxsdk.style.properties;
+package com.mapbox.mapboxsdk.style.layers;
 
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class LayoutProperty<T> {
+/**
+ * Paint/Layout propertie for Layer
+ */
+public class Property<T> {
 
 <% for (const property of properties) { -%>
     //<%- property.name %>
@@ -30,7 +33,7 @@ public class LayoutProperty<T> {
     public final String name;
     public final T value;
 
-    /* package */ LayoutProperty(String name, T value) {
+    /* package */ Property(String name, T value) {
         this.name = name;
         this.value = value;
     }

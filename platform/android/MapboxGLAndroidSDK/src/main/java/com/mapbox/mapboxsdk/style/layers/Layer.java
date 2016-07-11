@@ -3,19 +3,19 @@ package com.mapbox.mapboxsdk.style.layers;
 /**
  * Base class for the different Layer types
  */
-public abstract class Layer {
+public class Layer {
 
-    private final String nativeMapId;
+    private final long nativeMapPtr;
 
-    protected Layer(String nativeMapId) {
-        this.nativeMapId = nativeMapId;
+    public Layer(long nativeMapId) {
+        this.nativeMapPtr = nativeMapId;
     }
 
     public void setProperty(Property<?> property) {
-        nativeSetProperty(nativeMapId, property);
+        nativeSetProperty(nativeMapPtr, property);
     }
 
 
-    private native void nativeSetProperty(String nativeMapId, Property<?> property);
+    private native void nativeSetProperty(long nativeMapPtr, Property<?> property);
 
 }

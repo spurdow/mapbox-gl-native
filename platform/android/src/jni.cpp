@@ -14,6 +14,7 @@
 #include <mbgl/map/map.hpp>
 #include <mbgl/map/camera.hpp>
 #include <mbgl/annotation/annotation.hpp>
+#include <mbgl/style/layer.hpp>
 #include <mbgl/style/layers/custom_layer.hpp>
 #include <mbgl/sprite/sprite_image.hpp>
 #include <mbgl/platform/event.hpp>
@@ -157,6 +158,9 @@ jni::jmethodID* offlineRegionDeleteOnDeleteId = nullptr;
 jni::jmethodID* offlineRegionDeleteOnErrorId = nullptr;
 
 // Offline declarations end
+
+jni::jclass* layerClass = nullptr;
+jni::jmethodID* layerConstructorId = nullptr;
 
 bool attach_jni_thread(JavaVM* vm, JNIEnv** env, std::string threadName) {
     assert(vm != nullptr);
@@ -1085,8 +1089,20 @@ void nativeRemoveCustomLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapView
     nativeMapView->getMap().removeLayer(std_string_from_jstring(env, id));
 }
 
-void nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, jni::jstring* id) {
-    //TODO
+jni::jobject* nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, jni::jstring* jLayerId) {
+    mbgl::Log::Debug(mbgl::Event::JNI, "nativeGetLayer");
+    assert(nativeMapViewPtr != 0);
+
+    NativeMapView *nativeMapView = reinterpret_cast<NativeMapView *>(nativeMapViewPtr);
+
+    std::string layerId = std_string_from_jstring(env, jLayerId);
+    mbgl::style::Layer* layer = nativeMapView->getMap().getLayer(layerId);
+
+    if (layer != nullptr) {
+        return &jni::NewObject(*env, *layerClass, *layerConstructorId, jLayerId);
+    } else {
+        return NULL;
+    }
 }
 
 // Offline calls begin
@@ -1800,6 +1816,12 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     offlineRegionDeleteOnErrorId = &jni::GetMethodID(env, *offlineRegionDeleteCallbackClass, "onError", "(Ljava/lang/String;)V");
 
     // Offline end
+
+    // Style
+
+    layerClass = &jni::FindClass(env, "com/mapbox/mapboxsdk/style/layers/Layer");
+    layerClass = jni::NewGlobalRef(env, layerClass).release();
+    layerConstructorId = &jni::GetMethodID(env, *layerClass, "<init>", "(J)V");
 
     char release[PROP_VALUE_MAX] = "";
     __system_property_get("ro.build.version.release", release);

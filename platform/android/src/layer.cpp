@@ -2,18 +2,19 @@
 #include <jni/jni.hpp>
 
 //XXX
+#include <mbgl/platform/log.hpp>
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 namespace mbgl {
 namespace android {
 
     Layer::Layer(jni::JNIEnv& env) {
-        jni::UniqueLocalFrame frame = jni::PushLocalFrame(env, 10);
+        mbgl::Log::Info(mbgl::Event::JNI, "Layer constructed");
+        //jni::UniqueLocalFrame frame = jni::PushLocalFrame(env, 10);
 
         static auto constructor = javaClass.GetConstructor<jni::jlong>(env);
 
-        javaLayer = javaClass.New(env, constructor,
-            reinterpret_cast<jlong>(this)).NewGlobalRef(env);
+        javaLayer = javaClass.New(env, constructor, reinterpret_cast<jlong>(this)).NewGlobalRef(env);
     }
 
 //    Layer::Layer(JNIEnv *env) {
@@ -21,10 +22,10 @@ namespace android {
 //    }
 
     Layer::~Layer() {
-
+        mbgl::Log::Info(mbgl::Event::JNI, "Layer destroyed");
     }
 
-    void Layer::setProperty(jni::JNIEnv& env, jni::jlong jNativeMapPtr, jni::jobject jProperty) {
+    void Layer::setProperty(jni::JNIEnv& env, jni::jlong jNativeMapPtr, jni::Object<> jProperty) {
 
     }
 

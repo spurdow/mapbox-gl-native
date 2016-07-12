@@ -25,7 +25,7 @@ public:
 
     virtual ~Layer();
 
-    void setProperty(jni::JNIEnv&, jni::jlong jNativeMapPtr, jni::jobject jProperty);
+    void setProperty(jni::JNIEnv&, jni::jlong jNativeMapPtr, jni::Object<> jProperty);
 
     static jni::Class<Layer> javaClass;
 

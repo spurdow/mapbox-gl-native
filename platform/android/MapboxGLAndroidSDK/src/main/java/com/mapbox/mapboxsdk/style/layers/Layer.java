@@ -1,21 +1,29 @@
 package com.mapbox.mapboxsdk.style.layers;
 
+import android.util.Log;
+
 /**
  * Base class for the different Layer types
  */
 public class Layer {
 
-    private final long nativeMapPtr;
+    private long nativePtr;
+//    private final long nativeMapPtr;
 
-    public Layer(long nativeMapId) {
-        this.nativeMapPtr = nativeMapId;
+    private Layer(long nativePtr /*, long nativeMapPtr*/) {
+        Log.i(Layer.class.getSimpleName(), "CONSTRUCTED: " + nativePtr);
+        this.nativePtr = nativePtr;
+//        this.nativeMapPtr = nativeMapPtr;
     }
+
+//    public Layer(long nativeMapId) {
+//        this.nativeMapPtr = nativeMapId;
+//    }
 
     public void setProperty(Property<?> property) {
-        nativeSetProperty(nativeMapPtr, property);
+//        nativeSetProperty(nativeMapPtr, property);
     }
 
-
-    private native void nativeSetProperty(long nativeMapPtr, Property<?> property);
+    private native void nativeSetProperty(long nativeMapPtr, Object property);
 
 }

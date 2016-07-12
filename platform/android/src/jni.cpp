@@ -10,6 +10,7 @@
 
 #include "jni.hpp"
 #include "native_map_view.hpp"
+#include "layer.hpp"
 
 #include <mbgl/map/map.hpp>
 #include <mbgl/map/camera.hpp>
@@ -1099,7 +1100,9 @@ jni::jobject* nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapView
     mbgl::style::Layer* layer = nativeMapView->getMap().getLayer(layerId);
 
     if (layer != nullptr) {
-        return &jni::NewObject(*env, *layerClass, *layerConstructorId, jLayerId);
+        mbgl::android::Layer jLayer {*env};
+        jni::jobject* result = *jLayer.javaLayer;
+        return jni::NewLocalRef(*env, result);
     } else {
         return NULL;
     }
@@ -1561,6 +1564,7 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     static mbgl::util::RunLoop mainRunLoop;
 
     mbgl::android::RegisterNativeHTTPRequest(env);
+    mbgl::android::registerNativeLayer(env);
 
     latLngClass = &jni::FindClass(env, "com/mapbox/mapboxsdk/geometry/LatLng");
     latLngClass = jni::NewGlobalRef(env, latLngClass).release();

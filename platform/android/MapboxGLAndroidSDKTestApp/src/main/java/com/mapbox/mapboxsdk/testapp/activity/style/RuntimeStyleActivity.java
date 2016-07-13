@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.location.Location;
 import android.os.Build;
@@ -40,6 +41,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.testapp.R;
 import com.mapbox.mapboxsdk.testapp.model.annotations.PulseMarkerView;
 import com.mapbox.mapboxsdk.testapp.model.annotations.PulseMarkerViewOptions;
@@ -56,6 +58,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+
 /**
  * Sample Activity to show a typical location picker use case
  */
@@ -68,7 +72,7 @@ public class RuntimeStyleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location_picker);
+        setContentView(R.layout.activity_runtime_style);
 
         setupActionBar();
 
@@ -86,6 +90,11 @@ public class RuntimeStyleActivity extends AppCompatActivity {
                 //Get layer to manipulate
                 Layer background = mapboxMap.getLayer("background");
                 Log.i(TAG, String.format("Found background layer: %s", background));
+                background.setProperty(backgroundColor(Color.RED));
+
+                Layer custom = new Layer();
+                Log.i(TAG, "Created the layer");
+                custom = null;
             }
         });
     }

@@ -10,20 +10,25 @@ public class Layer {
     private long nativePtr;
 //    private final long nativeMapPtr;
 
-    private Layer(long nativePtr /*, long nativeMapPtr*/) {
-        Log.i(Layer.class.getSimpleName(), "CONSTRUCTED: " + nativePtr);
+    public Layer(long nativePtr) {
+        Log.i(Layer.class.getSimpleName(), "Native pointer constructor: " + nativePtr);
         this.nativePtr = nativePtr;
-//        this.nativeMapPtr = nativeMapPtr;
     }
 
-//    public Layer(long nativeMapId) {
-//        this.nativeMapPtr = nativeMapId;
-//    }
+    public Layer() {
+        Log.i(Layer.class.getSimpleName(), "Default constructor");
+        initialize();
+    }
+
+    protected native void initialize();
+
+    @Override
+    protected native void finalize() throws Throwable;
 
     public void setProperty(Property<?> property) {
 //        nativeSetProperty(nativeMapPtr, property);
     }
 
-    private native void nativeSetProperty(long nativeMapPtr, Object property);
+    protected native void nativeSetProperty(long nativeMapPtr, Object property);
 
 }

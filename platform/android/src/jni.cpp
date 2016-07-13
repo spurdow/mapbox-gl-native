@@ -160,9 +160,6 @@ jni::jmethodID* offlineRegionDeleteOnErrorId = nullptr;
 
 // Offline declarations end
 
-jni::jclass* layerClass = nullptr;
-jni::jmethodID* layerConstructorId = nullptr;
-
 bool attach_jni_thread(JavaVM* vm, JNIEnv** env, std::string threadName) {
     assert(vm != nullptr);
     assert(env != nullptr);
@@ -1090,22 +1087,30 @@ void nativeRemoveCustomLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapView
     nativeMapView->getMap().removeLayer(std_string_from_jstring(env, id));
 }
 
-jni::jobject* nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, jni::jstring* jLayerId) {
+jni::jobject* nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapViewPtr, jni::jstring* layerId) {
     mbgl::Log::Debug(mbgl::Event::JNI, "nativeGetLayer");
+
+    assert(env);
     assert(nativeMapViewPtr != 0);
 
+    //Leaked
+    static jni::Class<Layer> javaClass = Layer::javaClass;
+    static auto constructor = javaClass.GetConstructor<jni::jlong>(*env);
+    mbgl::Log::Debug(mbgl::Event::JNI, "Class references initialized");
+
     NativeMapView *nativeMapView = reinterpret_cast<NativeMapView *>(nativeMapViewPtr);
+    mbgl::style::Layer* coreLayer = nativeMapView->getMap().getLayer(std_string_from_jstring(env, layerId));
 
-    std::string layerId = std_string_from_jstring(env, jLayerId);
-    mbgl::style::Layer* layer = nativeMapView->getMap().getLayer(layerId);
-
-    if (layer != nullptr) {
-        mbgl::android::Layer jLayer {*env};
-        jni::jobject* result = *jLayer.javaLayer;
-        return jni::NewLocalRef(*env, result);
-    } else {
-        return NULL;
+    if (!coreLayer) {
+       mbgl::Log::Debug(mbgl::Event::JNI, "No layer found");
+       return jni::Object<Layer>();
     }
+
+   std::unique_ptr<Layer> peerLayer = std::make_unique<Layer>(*coreLayer);
+   jni::Object<Layer> result = javaClass.New(*env, constructor, reinterpret_cast<jni::jlong>(peerLayer.get()));
+   peerLayer.release();
+
+   return result;
 }
 
 // Offline calls begin
@@ -1820,12 +1825,6 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     offlineRegionDeleteOnErrorId = &jni::GetMethodID(env, *offlineRegionDeleteCallbackClass, "onError", "(Ljava/lang/String;)V");
 
     // Offline end
-
-    // Style
-
-    layerClass = &jni::FindClass(env, "com/mapbox/mapboxsdk/style/layers/Layer");
-    layerClass = jni::NewGlobalRef(env, layerClass).release();
-    layerConstructorId = &jni::GetMethodID(env, *layerClass, "<init>", "(J)V");
 
     char release[PROP_VALUE_MAX] = "";
     __system_property_get("ro.build.version.release", release);

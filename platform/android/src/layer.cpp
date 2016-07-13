@@ -18,10 +18,6 @@ namespace android {
         , layer(*ownedLayer) {
 
         mbgl::Log::Debug(mbgl::Event::JNI, "Layer constructed, owning reference");
-
-        static jni::Constructor<Layer, jni::jlong>  constructor = javaClass.GetConstructor<jni::jlong>(env);
-
-        javaLayer = javaClass.New(env, constructor, reinterpret_cast<jlong>(this)).NewGlobalRef(env);
     }
 
     Layer::Layer(mbgl::style::Layer& coreLayer) : layer(coreLayer) {

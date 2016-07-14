@@ -90,7 +90,9 @@ public class RuntimeStyleActivity extends AppCompatActivity {
                 //Get layer to manipulate
                 Layer background = mapboxMap.getLayer("background");
                 Log.i(TAG, String.format("Found background layer: %s", background));
-                background.setProperty(backgroundColor(Color.RED));
+                background.setPaintProperty(backgroundOpacity(0f));
+                background.setPaintProperty(backgroundColor(Color.RED));
+                background.setPaintProperty(backgroundPattern("some pattern"));
 
                 Layer custom = new Layer();
                 Log.i(TAG, "Created the layer");

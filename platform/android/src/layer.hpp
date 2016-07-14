@@ -1,9 +1,10 @@
 #pragma once
 
 #include <mbgl/util/noncopyable.hpp>
+#include <mbgl/map/map.hpp>
 #include <mbgl/style/layer.hpp>
 
-#include "property.hpp"
+#include "value.hpp"
 
 #include <jni/jni.hpp>
 
@@ -21,24 +22,29 @@ public:
     static void registerNative(jni::JNIEnv&);
 
     /*
-     * Called when a Java object is already created
+     * Called when a Java object is created on the c++ side
      */
-    Layer(mbgl::style::Layer&);
+    Layer(mbgl::Map&, mbgl::style::Layer&);
 
     /*
-     * Called when a Java object needs to be created
+     * Called when a Java object was created from the jvm side
      */
     Layer(JNIEnv& env);
 
     virtual ~Layer();
 
-    void setProperty(jni::JNIEnv&, jni::jlong jNativeMapPtr, jni::Object<Property> property);
+    jni::String getId(jni::JNIEnv&);
+
+    void setLayoutProperty(jni::JNIEnv&, jni::String, jni::Object<mbgl::android::Value>);
+
+    void setPaintProperty(jni::JNIEnv&, jni::String, jni::Object<mbgl::android::Value>);
 
     static jni::Class<Layer> javaClass;
 
 private:
     std::unique_ptr<mbgl::style::Layer> ownedLayer;
     mbgl::style::Layer& layer;
+    mbgl::Map* map;
 
 };
 

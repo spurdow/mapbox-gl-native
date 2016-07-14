@@ -9,7 +9,6 @@ public class Layer {
 
     private long nativePtr;
     private boolean attached;
-//    private final long nativeMapPtr;
 
     public Layer(long nativePtr) {
         Log.i(Layer.class.getSimpleName(), "Native pointer constructor: " + nativePtr);
@@ -28,15 +27,34 @@ public class Layer {
     @Override
     protected native void finalize() throws Throwable;
 
-    public void setProperty(Property<?> property) {
+    public void setLayoutProperty(Property<?> property) {
         if (attached) {
-            nativeSetProperty(0l /*XXX*/, property);
+            nativeSetLayoutProperty(property.name, new Value<>(property.value));
         } else {
             //TODO Add property to list to support addLayer();
         }
     }
 
-    //TODO: remove map pointer
-    protected native void nativeSetProperty(long nativeMapPtr, Property property);
+    public void setPaintProperty(Property<?> property) {
+        if (attached) {
+            nativeSetPaintProperty(property.name, new Value<>(property.value));
+        } else {
+            //TODO Add property to list to support addLayer();
+        }
+    }
 
+    public String getId() {
+        return nativeGetId();
+    }
+
+    protected native String nativeGetId();
+
+    protected native void nativeSetLayoutProperty(String name, Value value);
+
+    protected native void nativeSetPaintProperty(String name, Value value);
+
+    @Override
+    public String toString() {
+        return "Layer: " + getId();
+    }
 }

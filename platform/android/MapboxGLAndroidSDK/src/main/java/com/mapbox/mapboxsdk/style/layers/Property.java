@@ -215,19 +215,12 @@ public class Property<T> {
 
 
     //Class definition
-    private long nativePtr;
     public final String name;
     public final T value;
 
     /* package */ Property(String name, T value) {
         this.name = name;
         this.value = value;
-        initialize();
     }
-
-    protected native void initialize();
-
-    @Override
-    protected native void finalize() throws Throwable;
 
 }

@@ -10,7 +10,7 @@
 
 #include "jni.hpp"
 #include "native_map_view.hpp"
-#include "property.hpp"
+#include "value.hpp"
 #include "layer.hpp"
 
 #include <mbgl/map/map.hpp>
@@ -1106,7 +1106,7 @@ jni::jobject* nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapView
        return jni::Object<Layer>();
     }
 
-   std::unique_ptr<Layer> peerLayer = std::make_unique<Layer>(*coreLayer);
+   std::unique_ptr<Layer> peerLayer = std::make_unique<Layer>(nativeMapView->getMap(), *coreLayer);
    jni::Object<Layer> result = javaClass.New(*env, constructor, reinterpret_cast<jni::jlong>(peerLayer.get()));
    peerLayer.release();
 
@@ -1569,7 +1569,8 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     static mbgl::util::RunLoop mainRunLoop;
 
     mbgl::android::RegisterNativeHTTPRequest(env);
-    mbgl::android::Property::registerNative(env);
+
+    mbgl::android::Value::registerNative(env);
     mbgl::android::Layer::registerNative(env);
 
     latLngClass = &jni::FindClass(env, "com/mapbox/mapboxsdk/geometry/LatLng");

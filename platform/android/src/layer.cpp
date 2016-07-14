@@ -1,6 +1,13 @@
 #include "layer.hpp"
+#include "android_conversion.hpp"
+
 #include <jni/jni.hpp>
+
 #include <mbgl/platform/log.hpp>
+#include <mbgl/style/conversion.hpp>
+#include <mbgl/style/conversion/layer.hpp>
+
+#include <string>
 
 //XXX
 #include <mbgl/style/layers/background_layer.hpp>
@@ -20,7 +27,7 @@ namespace android {
         mbgl::Log::Debug(mbgl::Event::JNI, "Layer constructed, owning reference");
     }
 
-    Layer::Layer(mbgl::style::Layer& coreLayer) : layer(coreLayer) {
+    Layer::Layer(mbgl::Map& coreMap, mbgl::style::Layer& coreLayer) : layer(coreLayer) , map(&coreMap) {
         mbgl::Log::Debug(mbgl::Event::JNI, "Non-owning reference constructor");
     }
 
@@ -28,8 +35,45 @@ namespace android {
         mbgl::Log::Debug(mbgl::Event::JNI, "Layer destroyed");
     }
 
-    void Layer::setProperty(jni::JNIEnv& env, jni::jlong jNativeMapPtr, jni::Object<Property> property) {
-        mbgl::Log::Debug(mbgl::Event::JNI, "Set property");
+    jni::String Layer::getId(jni::JNIEnv& env) {
+        return jni::Make<jni::String>(env, layer.getID());
+    }
+
+    void Layer::setLayoutProperty(jni::JNIEnv& env, jni::String jname, jni::Object<mbgl::android::Value> jvalue) {
+        mbgl::Log::Debug(mbgl::Event::JNI, "Set layout property");
+
+        mbgl::android::Value* value = mbgl::android::Value::instance(env, jvalue);
+
+        assert(value!=0);
+
+        //Convert and set property
+        optional<mbgl::style::conversion::Error> error = mbgl::style::conversion::setLayoutProperty(layer, jni::Make<std::string>(env, jname), *value);
+        if (error) {
+            mbgl::Log::Error(mbgl::Event::JNI, "Error setting property: " + jni::Make<std::string>(env, jname) + " " + error->message);
+            return;
+        }
+
+        //Update the style
+        map->update(mbgl::Update::RecalculateStyle);
+    }
+
+    void Layer::setPaintProperty(jni::JNIEnv& env, jni::String jname, jni::Object<mbgl::android::Value> jvalue) {
+        mbgl::Log::Debug(mbgl::Event::JNI, "Set paint property");
+
+        mbgl::android::Value* value = mbgl::android::Value::instance(env, jvalue);
+
+        assert(value!=0);
+
+        //Convert and set property
+        //TODO: paint class
+        optional<mbgl::style::conversion::Error> error = mbgl::style::conversion::setPaintProperty(layer, jni::Make<std::string>(env, jname), *value, mbgl::optional<std::string>());
+        if (error) {
+            mbgl::Log::Error(mbgl::Event::JNI, "Error setting property: " + jni::Make<std::string>(env, jname) + " " + error->message);
+            return;
+        }
+
+        //Update the style
+        map->update(mbgl::Update::RecalculateStyle);
     }
 
     jni::Class<Layer> Layer::javaClass;
@@ -37,15 +81,19 @@ namespace android {
     void Layer::registerNative(jni::JNIEnv& env) {
         mbgl::Log::Debug(mbgl::Event::JNI, "Registering native layer");
 
+        //Lookup the class
         Layer::javaClass = *jni::Class<Layer>::Find(env).NewGlobalRef(env).release();
 
         #define METHOD(MethodPtr, name) jni::MakeNativePeerMethod<decltype(MethodPtr), (MethodPtr)>(name)
 
+        //Register the peer
         jni::RegisterNativePeer<Layer>(env, Layer::javaClass, "nativePtr",
             std::make_unique<Layer, JNIEnv&>,
             "initialize",
             "finalize",
-            METHOD(&Layer::setProperty, "nativeSetProperty"));
+            METHOD(&Layer::getId, "nativeGetId"),
+            METHOD(&Layer::setLayoutProperty, "nativeSetLayoutProperty"),
+            METHOD(&Layer::setPaintProperty, "nativeSetPaintProperty"));
     }
 }
 }

@@ -28,13 +28,13 @@ namespace android {
         mbgl::Log::Debug(mbgl::Event::JNI, "Layer destroyed");
     }
 
-    void Layer::setProperty(jni::JNIEnv& env, jni::jlong jNativeMapPtr, jni::Object<> jProperty) {
+    void Layer::setProperty(jni::JNIEnv& env, jni::jlong jNativeMapPtr, jni::Object<Property> property) {
         mbgl::Log::Debug(mbgl::Event::JNI, "Set property");
     }
 
     jni::Class<Layer> Layer::javaClass;
 
-    void registerNativeLayer(jni::JNIEnv& env) {
+    void Layer::registerNative(jni::JNIEnv& env) {
         mbgl::Log::Debug(mbgl::Event::JNI, "Registering native layer");
 
         Layer::javaClass = *jni::Class<Layer>::Find(env).NewGlobalRef(env).release();

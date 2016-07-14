@@ -310,6 +310,10 @@ public class PropertyFactory {
         return new Property<>("circle-translate-anchor", value);
     }
 
+    public static Property<String> circlePitchScale(@Property.CIRCLE_PITCH_SCALE String value) {
+        return new Property<>("circle-pitch-scale", value);
+    }
+
     public static Property<Float> rasterOpacity(Float value) {
         return new Property<>("raster-opacity", value);
     }

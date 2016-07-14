@@ -202,12 +202,32 @@ public class Property<T> {
     @Retention(RetentionPolicy.SOURCE)
     public @interface CIRCLE_TRANSLATE_ANCHOR {}
 
+    //circle-pitch-scale
+    public static final String CIRCLE_PITCH_SCALE_MAP = "map";
+    public static final String CIRCLE_PITCH_SCALE_VIEWPORT = "viewport";
 
+    @StringDef({
+            CIRCLE_PITCH_SCALE_MAP,
+            CIRCLE_PITCH_SCALE_VIEWPORT,
+        })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CIRCLE_PITCH_SCALE {}
+
+
+    //Class definition
+    private long nativePtr;
     public final String name;
     public final T value;
 
     /* package */ Property(String name, T value) {
         this.name = name;
         this.value = value;
+        initialize();
     }
+
+    protected native void initialize();
+
+    @Override
+    protected native void finalize() throws Throwable;
+
 }

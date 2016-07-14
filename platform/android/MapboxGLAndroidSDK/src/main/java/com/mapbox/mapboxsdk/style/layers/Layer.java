@@ -8,15 +8,18 @@ import android.util.Log;
 public class Layer {
 
     private long nativePtr;
+    private boolean attached;
 //    private final long nativeMapPtr;
 
     public Layer(long nativePtr) {
         Log.i(Layer.class.getSimpleName(), "Native pointer constructor: " + nativePtr);
         this.nativePtr = nativePtr;
+        this.attached = true;
     }
 
     public Layer() {
         Log.i(Layer.class.getSimpleName(), "Default constructor");
+        this.attached = false;
         initialize();
     }
 
@@ -26,9 +29,14 @@ public class Layer {
     protected native void finalize() throws Throwable;
 
     public void setProperty(Property<?> property) {
-//        nativeSetProperty(nativeMapPtr, property);
+        if (attached) {
+            nativeSetProperty(0l /*XXX*/, property);
+        } else {
+            //TODO Add property to list to support addLayer();
+        }
     }
 
-    protected native void nativeSetProperty(long nativeMapPtr, Object property);
+    //TODO: remove map pointer
+    protected native void nativeSetProperty(long nativeMapPtr, Property property);
 
 }

@@ -10,6 +10,7 @@
 
 #include "jni.hpp"
 #include "native_map_view.hpp"
+#include "property.hpp"
 #include "layer.hpp"
 
 #include <mbgl/map/map.hpp>
@@ -1096,7 +1097,6 @@ jni::jobject* nativeGetLayer(JNIEnv *env, jni::jobject* obj, jlong nativeMapView
     //Leaked
     static jni::Class<Layer> javaClass = Layer::javaClass;
     static auto constructor = javaClass.GetConstructor<jni::jlong>(*env);
-    mbgl::Log::Debug(mbgl::Event::JNI, "Class references initialized");
 
     NativeMapView *nativeMapView = reinterpret_cast<NativeMapView *>(nativeMapViewPtr);
     mbgl::style::Layer* coreLayer = nativeMapView->getMap().getLayer(std_string_from_jstring(env, layerId));
@@ -1569,7 +1569,8 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     static mbgl::util::RunLoop mainRunLoop;
 
     mbgl::android::RegisterNativeHTTPRequest(env);
-    mbgl::android::registerNativeLayer(env);
+    mbgl::android::Property::registerNative(env);
+    mbgl::android::Layer::registerNative(env);
 
     latLngClass = &jni::FindClass(env, "com/mapbox/mapboxsdk/geometry/LatLng");
     latLngClass = jni::NewGlobalRef(env, latLngClass).release();

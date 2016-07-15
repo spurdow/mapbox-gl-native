@@ -34,6 +34,7 @@ import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerView;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationListener;
 import com.mapbox.mapboxsdk.location.LocationServices;
@@ -87,12 +88,41 @@ public class RuntimeStyleActivity extends AppCompatActivity {
                 //Store for later
                 mapboxMap = map;
 
-                //Get layer to manipulate
+                //Center and Zoom
+                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.379189, 4.899431), 10));
+
+                //Get layers to manipulate
                 Layer background = mapboxMap.getLayer("background");
                 Log.i(TAG, String.format("Found background layer: %s", background));
                 background.setPaintProperty(backgroundOpacity(0f));
                 background.setPaintProperty(backgroundColor(Color.RED));
                 background.setPaintProperty(backgroundPattern("some pattern"));
+
+                Layer water = mapboxMap.getLayer("water-shadow");
+                if (water != null) {
+                    Toast.makeText(RuntimeStyleActivity.this, "Change water color", Toast.LENGTH_SHORT).show();
+                    water.setPaintProperty(fillColor(Color.RED));
+                    water.setPaintProperty(fillPattern(null));
+                } else {
+                    Toast.makeText(RuntimeStyleActivity.this, "No water layer", Toast.LENGTH_SHORT).show();
+                }
+
+                Layer waterways = mapboxMap.getLayer("waterway-small");
+                if (waterways != null) {
+                    Toast.makeText(RuntimeStyleActivity.this, "Change waterway color", Toast.LENGTH_SHORT).show();
+                    waterways.setPaintProperty(lineColor(Color.RED));
+                } else {
+                    Toast.makeText(RuntimeStyleActivity.this, "No waterway layer", Toast.LENGTH_SHORT).show();
+                }
+
+
+                Layer roads = mapboxMap.getLayer("road-street");
+                if (roads != null) {
+                    Toast.makeText(RuntimeStyleActivity.this, "Change road color", Toast.LENGTH_SHORT).show();
+                    roads.setPaintProperty(lineColor(Color.RED));
+                } else {
+                    Toast.makeText(RuntimeStyleActivity.this, "No roads layer", Toast.LENGTH_SHORT).show();
+                }
 
                 Layer custom = new Layer();
                 Log.i(TAG, "Created the layer");

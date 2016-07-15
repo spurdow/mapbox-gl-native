@@ -10,4 +10,8 @@
         android:id="@+id/action_background_opacity"
         android:title="Set background opacity"
         mapbox:showAsAction="never"/>
+    <item
+        android:id="@+id/action_road_avoid_edges"
+        android:title="Set road symbol placement to Point"
+        mapbox:showAsAction="never"/>
 </menu>

@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,38 +92,7 @@ public class RuntimeStyleActivity extends AppCompatActivity {
                 //Center and Zoom
                 mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.379189, 4.899431), 10));
 
-                //Get layers to manipulate
-                Layer background = mapboxMap.getLayer("background");
-                Log.i(TAG, String.format("Found background layer: %s", background));
-                background.setPaintProperty(backgroundOpacity(0f));
-                background.setPaintProperty(backgroundColor(Color.RED));
-                background.setPaintProperty(backgroundPattern("some pattern"));
-
-                Layer water = mapboxMap.getLayer("water");
-                if (water != null) {
-                    Toast.makeText(RuntimeStyleActivity.this, "Change water color", Toast.LENGTH_SHORT).show();
-                    water.setPaintProperty(fillColor(Color.RED));
-                } else {
-                    Toast.makeText(RuntimeStyleActivity.this, "No water layer", Toast.LENGTH_SHORT).show();
-                }
-
-                Layer waterways = mapboxMap.getLayer("waterway-small");
-                if (waterways != null) {
-                    Toast.makeText(RuntimeStyleActivity.this, "Change waterway color", Toast.LENGTH_SHORT).show();
-                    waterways.setPaintProperty(lineColor(Color.RED));
-                } else {
-                    Toast.makeText(RuntimeStyleActivity.this, "No waterway layer", Toast.LENGTH_SHORT).show();
-                }
-
-
-                Layer roads = mapboxMap.getLayer("road-street");
-                if (roads != null) {
-                    Toast.makeText(RuntimeStyleActivity.this, "Change road color", Toast.LENGTH_SHORT).show();
-                    roads.setPaintProperty(lineColor(Color.RED));
-                } else {
-                    Toast.makeText(RuntimeStyleActivity.this, "No roads layer", Toast.LENGTH_SHORT).show();
-                }
-
+                //TODO: Add layer
                 Layer custom = new Layer();
                 Log.i(TAG, "Created the layer");
                 custom = null;
@@ -131,21 +101,15 @@ public class RuntimeStyleActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_runtime_style, menu);
+        return true;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
-    }
-
-
-    private void setupActionBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
     }
 
     @Override
@@ -178,8 +142,40 @@ public class RuntimeStyleActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.action_water_color:
+                setWaterColor();
+                return true;
+            case R.id.action_background_opacity:
+                setBackgroundOpacity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setBackgroundOpacity() {
+        //Get layers to manipulate
+        Layer background = mapboxMap.getLayer("background");
+        background.setPaintProperty(backgroundOpacity(0f));
+    }
+
+    private void setWaterColor() {
+        Layer water = mapboxMap.getLayer("water");
+        if (water != null) {
+            water.setPaintProperty(fillColor(Color.RED));
+        } else {
+            Toast.makeText(RuntimeStyleActivity.this, "No water layer in this style", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setupActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
         }
     }
 }

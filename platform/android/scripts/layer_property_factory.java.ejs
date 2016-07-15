@@ -14,6 +14,12 @@ import android.support.annotation.ColorInt;
 public class PropertyFactory {
 
 <% for (const property of properties) { -%>
+<% if (property.type == 'color') { -%>
+    public static Property<String> <%- camelizeWithLeadingLowercase(property.name) %>(@ColorInt int value) {
+        return new Property<>("<%-  property.name %>", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+<% } -%>
     public static Property<<%- propertyType(property) %>> <%- camelizeWithLeadingLowercase(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
         return new Property<>("<%-  property.name %>", value);
     }

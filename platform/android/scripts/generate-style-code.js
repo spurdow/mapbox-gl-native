@@ -29,11 +29,11 @@ global.snakeCaseUpper = function (str) {
 global.propertyType = function propertyType(property) {
 //TODO: Doe we want these exceptions?
 //  if (/-translate-anchor$/.test(property.name)) {
-//    return 'TranslateAnchorType';
-//  }
-//  if (/-(rotation|pitch)-alignment$/.test(property.name)) {
-//    return 'AlignmentType';
-//  }
+     //    return 'TranslateAnchorType';
+     //  }
+     //  if (/-(rotation|pitch)-alignment$/.test(property.name)) {
+     //    return 'AlignmentType';
+     //  }
   switch (property.type) {
       case 'boolean':
         return 'Boolean';
@@ -44,7 +44,7 @@ global.propertyType = function propertyType(property) {
       case 'enum':
         return `String`;
       case 'color':
-        return `Integer`;
+        return `String`;
       case 'array':
         return `${propertyType({type:property.value})}[]`;
       default:
@@ -56,8 +56,6 @@ global.propertyTypeAnnotation = function propertyTypeAnnotation(property) {
   switch (property.type) {
       case 'enum':
         return `@Property.${snakeCaseUpper(property.name)}`;
-      case 'color':
-        return `@ColorInt`;
       default:
         return "";
   }

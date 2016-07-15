@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Paint/Layout propertie for Layer
+ * Paint/Layout properties for Layer
  */
 public class Property<T> {
 

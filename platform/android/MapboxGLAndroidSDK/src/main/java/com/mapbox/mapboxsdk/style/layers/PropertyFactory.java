@@ -170,11 +170,19 @@ public class PropertyFactory {
         return new Property<>("fill-opacity", value);
     }
 
-    public static Property<Integer> fillColor(@ColorInt Integer value) {
+    public static Property<String> fillColor(@ColorInt int value) {
+        return new Property<>("fill-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> fillColor(String value) {
         return new Property<>("fill-color", value);
     }
 
-    public static Property<Integer> fillOutlineColor(@ColorInt Integer value) {
+    public static Property<String> fillOutlineColor(@ColorInt int value) {
+        return new Property<>("fill-outline-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> fillOutlineColor(String value) {
         return new Property<>("fill-outline-color", value);
     }
 
@@ -194,7 +202,11 @@ public class PropertyFactory {
         return new Property<>("line-opacity", value);
     }
 
-    public static Property<Integer> lineColor(@ColorInt Integer value) {
+    public static Property<String> lineColor(@ColorInt int value) {
+        return new Property<>("line-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> lineColor(String value) {
         return new Property<>("line-color", value);
     }
 
@@ -234,11 +246,19 @@ public class PropertyFactory {
         return new Property<>("icon-opacity", value);
     }
 
-    public static Property<Integer> iconColor(@ColorInt Integer value) {
+    public static Property<String> iconColor(@ColorInt int value) {
+        return new Property<>("icon-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> iconColor(String value) {
         return new Property<>("icon-color", value);
     }
 
-    public static Property<Integer> iconHaloColor(@ColorInt Integer value) {
+    public static Property<String> iconHaloColor(@ColorInt int value) {
+        return new Property<>("icon-halo-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> iconHaloColor(String value) {
         return new Property<>("icon-halo-color", value);
     }
 
@@ -262,11 +282,19 @@ public class PropertyFactory {
         return new Property<>("text-opacity", value);
     }
 
-    public static Property<Integer> textColor(@ColorInt Integer value) {
+    public static Property<String> textColor(@ColorInt int value) {
+        return new Property<>("text-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> textColor(String value) {
         return new Property<>("text-color", value);
     }
 
-    public static Property<Integer> textHaloColor(@ColorInt Integer value) {
+    public static Property<String> textHaloColor(@ColorInt int value) {
+        return new Property<>("text-halo-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> textHaloColor(String value) {
         return new Property<>("text-halo-color", value);
     }
 
@@ -290,7 +318,11 @@ public class PropertyFactory {
         return new Property<>("circle-radius", value);
     }
 
-    public static Property<Integer> circleColor(@ColorInt Integer value) {
+    public static Property<String> circleColor(@ColorInt int value) {
+        return new Property<>("circle-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> circleColor(String value) {
         return new Property<>("circle-color", value);
     }
 
@@ -342,7 +374,11 @@ public class PropertyFactory {
         return new Property<>("raster-fade-duration", value);
     }
 
-    public static Property<Integer> backgroundColor(@ColorInt Integer value) {
+    public static Property<String> backgroundColor(@ColorInt int value) {
+        return new Property<>("background-color", String.format("#%06X", (0xFFFFFF & value)));
+    }
+
+    public static Property<String> backgroundColor(String value) {
         return new Property<>("background-color", value);
     }
 

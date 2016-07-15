@@ -1,6 +1,7 @@
 // This file is generated. Do not edit.
 package com.mapbox.mapboxsdk.style.layers;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.ColorInt;
 
 /**
@@ -171,7 +172,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> fillColor(@ColorInt int value) {
-        return new Property<>("fill-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("fill-color", colorToRgbaString(value));
     }
 
     public static Property<String> fillColor(String value) {
@@ -179,7 +180,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> fillOutlineColor(@ColorInt int value) {
-        return new Property<>("fill-outline-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("fill-outline-color", colorToRgbaString(value));
     }
 
     public static Property<String> fillOutlineColor(String value) {
@@ -203,7 +204,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> lineColor(@ColorInt int value) {
-        return new Property<>("line-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("line-color", colorToRgbaString(value));
     }
 
     public static Property<String> lineColor(String value) {
@@ -247,7 +248,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> iconColor(@ColorInt int value) {
-        return new Property<>("icon-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("icon-color", colorToRgbaString(value));
     }
 
     public static Property<String> iconColor(String value) {
@@ -255,7 +256,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> iconHaloColor(@ColorInt int value) {
-        return new Property<>("icon-halo-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("icon-halo-color", colorToRgbaString(value));
     }
 
     public static Property<String> iconHaloColor(String value) {
@@ -283,7 +284,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> textColor(@ColorInt int value) {
-        return new Property<>("text-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("text-color", colorToRgbaString(value));
     }
 
     public static Property<String> textColor(String value) {
@@ -291,7 +292,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> textHaloColor(@ColorInt int value) {
-        return new Property<>("text-halo-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("text-halo-color", colorToRgbaString(value));
     }
 
     public static Property<String> textHaloColor(String value) {
@@ -319,7 +320,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> circleColor(@ColorInt int value) {
-        return new Property<>("circle-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("circle-color", colorToRgbaString(value));
     }
 
     public static Property<String> circleColor(String value) {
@@ -375,7 +376,7 @@ public class PropertyFactory {
     }
 
     public static Property<String> backgroundColor(@ColorInt int value) {
-        return new Property<>("background-color", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("background-color", colorToRgbaString(value));
     }
 
     public static Property<String> backgroundColor(String value) {
@@ -388,6 +389,11 @@ public class PropertyFactory {
 
     public static Property<Float> backgroundOpacity(Float value) {
         return new Property<>("background-opacity", value);
+    }
+
+    @SuppressLint("DefaultLocale")
+    static String colorToRgbaString(@ColorInt int value) {
+        return String.format("rgba(%d, %d, %d, %d)", (value >> 16) & 0xFF, (value >> 8) & 0xFF, value & 0xFF, (value >> 24) & 0xFF);
     }
 
 }

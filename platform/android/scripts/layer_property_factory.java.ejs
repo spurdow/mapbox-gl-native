@@ -4,6 +4,7 @@
 // This file is generated. Do not edit.
 package com.mapbox.mapboxsdk.style.layers;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.ColorInt;
 
 /**
@@ -16,7 +17,7 @@ public class PropertyFactory {
 <% for (const property of properties) { -%>
 <% if (property.type == 'color') { -%>
     public static Property<String> <%- camelizeWithLeadingLowercase(property.name) %>(@ColorInt int value) {
-        return new Property<>("<%-  property.name %>", String.format("#%06X", (0xFFFFFF & value)));
+        return new Property<>("<%-  property.name %>", colorToRgbaString(value));
     }
 
 <% } -%>
@@ -25,4 +26,9 @@ public class PropertyFactory {
     }
 
 <% } -%>
+    @SuppressLint("DefaultLocale")
+    static String colorToRgbaString(@ColorInt int value) {
+        return String.format("rgba(%d, %d, %d, %d)", (value >> 16) & 0xFF, (value >> 8) & 0xFF, value & 0xFF, (value >> 24) & 0xFF);
+    }
+
 }

@@ -61,14 +61,18 @@ namespace android {
 
     float Value::toNumber() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.toNumber()");
-        //TODO
-        return 0.0;
+        static jni::jclass* Number = jni::NewGlobalRef(jenv, &jni::FindClass(jenv, "java/lang/Number")).release();
+        static jni::jmethodID& floatValueMethodId = jni::GetMethodID(jenv, *Number, "floatValue", "()F");
+
+        return jni::CallMethod<jni::jfloat>(jenv, value, floatValueMethodId);
     }
 
     bool Value::toBool() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.toBool()");
-        //TODO
-        return false;
+        static jni::jclass* Boolean = jni::NewGlobalRef(jenv, &jni::FindClass(jenv, "java/lang/Boolean")).release();
+        static jni::jmethodID& booleanValueMethodId = jni::GetMethodID(jenv, *Boolean, "booleanValue", "()Z");
+
+        return jni::CallMethod<jni::jboolean>(jenv, value, booleanValueMethodId);
     }
 }
 }

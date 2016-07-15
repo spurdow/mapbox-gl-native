@@ -16,10 +16,10 @@ public:
 
     static constexpr auto Name() { return "com/mapbox/mapboxsdk/style/layers/Layer"; };
 
-    /**
-     * Register the native class
-     */
-    static void registerNative(jni::JNIEnv&);
+                                                 /**
+                                                  * Register the native class
+                                                  */
+                                                 static void registerNative(jni::JNIEnv&);
 
     /*
      * Called when a Java object is created on the c++ side
@@ -35,9 +35,9 @@ public:
 
     jni::String getId(jni::JNIEnv&);
 
-    void setLayoutProperty(jni::JNIEnv&, jni::String, jni::Object<mbgl::android::Value>);
+    void setLayoutProperty(jni::JNIEnv&, jni::String, jni::Object<> value);
 
-    void setPaintProperty(jni::JNIEnv&, jni::String, jni::Object<mbgl::android::Value>);
+    void setPaintProperty(jni::JNIEnv&, jni::String, jni::Object<> value);
 
     static jni::Class<Layer> javaClass;
 

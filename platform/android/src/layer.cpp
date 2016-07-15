@@ -39,15 +39,13 @@ namespace android {
         return jni::Make<jni::String>(env, layer.getID());
     }
 
-    void Layer::setLayoutProperty(jni::JNIEnv& env, jni::String jname, jni::Object<mbgl::android::Value> jvalue) {
+    void Layer::setLayoutProperty(jni::JNIEnv& env, jni::String jname, jni::Object<> jvalue) {
         mbgl::Log::Debug(mbgl::Event::JNI, "Set layout property");
 
-        mbgl::android::Value* value = mbgl::android::Value::instance(env, jvalue);
-
-        assert(value!=0);
+        Value value(env, jvalue);
 
         //Convert and set property
-        optional<mbgl::style::conversion::Error> error = mbgl::style::conversion::setLayoutProperty(layer, jni::Make<std::string>(env, jname), *value);
+        optional<mbgl::style::conversion::Error> error = mbgl::style::conversion::setLayoutProperty(layer, jni::Make<std::string>(env, jname), value);
         if (error) {
             mbgl::Log::Error(mbgl::Event::JNI, "Error setting property: " + jni::Make<std::string>(env, jname) + " " + error->message);
             return;
@@ -57,16 +55,14 @@ namespace android {
         map->update(mbgl::Update::RecalculateStyle);
     }
 
-    void Layer::setPaintProperty(jni::JNIEnv& env, jni::String jname, jni::Object<mbgl::android::Value> jvalue) {
+    void Layer::setPaintProperty(jni::JNIEnv& env, jni::String jname, jni::Object<> jvalue) {
         mbgl::Log::Debug(mbgl::Event::JNI, "Set paint property");
 
-        mbgl::android::Value* value = mbgl::android::Value::instance(env, jvalue);
-
-        assert(value!=0);
+        Value value(env, jvalue);
 
         //Convert and set property
         //TODO: paint class
-        optional<mbgl::style::conversion::Error> error = mbgl::style::conversion::setPaintProperty(layer, jni::Make<std::string>(env, jname), *value, mbgl::optional<std::string>());
+        optional<mbgl::style::conversion::Error> error = mbgl::style::conversion::setPaintProperty(layer, jni::Make<std::string>(env, jname), value, mbgl::optional<std::string>());
         if (error) {
             mbgl::Log::Error(mbgl::Event::JNI, "Error setting property: " + jni::Make<std::string>(env, jname) + " " + error->message);
             return;

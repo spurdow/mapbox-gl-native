@@ -29,7 +29,7 @@ public class Layer {
 
     public void setLayoutProperty(Property<?> property) {
         if (attached) {
-            nativeSetLayoutProperty(property.name, new Value<>(property.value));
+            nativeSetLayoutProperty(property.name, property.value);
         } else {
             //TODO Add property to list to support addLayer();
         }
@@ -37,7 +37,7 @@ public class Layer {
 
     public void setPaintProperty(Property<?> property) {
         if (attached) {
-            nativeSetPaintProperty(property.name, new Value<>(property.value));
+            nativeSetPaintProperty(property.name, property.value);
         } else {
             //TODO Add property to list to support addLayer();
         }
@@ -49,9 +49,9 @@ public class Layer {
 
     protected native String nativeGetId();
 
-    protected native void nativeSetLayoutProperty(String name, Value value);
+    protected native void nativeSetLayoutProperty(String name, Object value);
 
-    protected native void nativeSetPaintProperty(String name, Value value);
+    protected native void nativeSetPaintProperty(String name, Object value);
 
     @Override
     public String toString() {

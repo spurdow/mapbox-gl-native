@@ -44,7 +44,7 @@ inline std::size_t arrayLength(const android::Value& value) {
 inline android::Value arrayMember(const android::Value& value, std::size_t i) {
     Log::Debug(mbgl::Event::Android, "arrayMember");
     //TODO
-    android::Value newVal(value.jenv);
+    android::Value newVal(value.jenv, nullptr);
     return newVal;
 }
 

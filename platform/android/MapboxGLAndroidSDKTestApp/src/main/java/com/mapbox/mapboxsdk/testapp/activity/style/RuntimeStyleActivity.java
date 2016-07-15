@@ -98,11 +98,10 @@ public class RuntimeStyleActivity extends AppCompatActivity {
                 background.setPaintProperty(backgroundColor(Color.RED));
                 background.setPaintProperty(backgroundPattern("some pattern"));
 
-                Layer water = mapboxMap.getLayer("water-shadow");
+                Layer water = mapboxMap.getLayer("water");
                 if (water != null) {
                     Toast.makeText(RuntimeStyleActivity.this, "Change water color", Toast.LENGTH_SHORT).show();
                     water.setPaintProperty(fillColor(Color.RED));
-                    water.setPaintProperty(fillPattern(null));
                 } else {
                     Toast.makeText(RuntimeStyleActivity.this, "No water layer", Toast.LENGTH_SHORT).show();
                 }

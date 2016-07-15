@@ -69,7 +69,7 @@ namespace android {
         }
 
         //Update the style
-        map->update(mbgl::Update::RecalculateStyle);
+        map->update(mbgl::Update::RecalculateStyle | mbgl::Update::Classes);
     }
 
     jni::Class<Layer> Layer::javaClass;

@@ -40,7 +40,6 @@ inline std::size_t arrayLength(const android::Value& value) {
     return 0;
 }
 
-/* TODO return Value */
 inline android::Value arrayMember(const android::Value& value, std::size_t i) {
     Log::Debug(mbgl::Event::Android, "arrayMember");
     //TODO
@@ -63,26 +62,42 @@ optional<Error> eachMember(const android::Value& value, Fn&& fn) {
 
 inline optional<bool> toBool(const android::Value& value) {
     Log::Debug(mbgl::Event::Android, "toBool");
-    //TODO
-    return {};
+    if (value.isBool()) {
+        return value.toBool();
+    } else {
+        return {};
+    }
 }
 
 inline optional<float> toNumber(const android::Value& value) {
     Log::Debug(mbgl::Event::Android, "toNumber");
-    //TODO
-     return 0;
+    if (value.isNumber()) {
+        return value.toNumber();
+    } else {
+        return {};
+    }
 }
 
 inline optional<std::string> toString(const android::Value& value) {
     Log::Debug(mbgl::Event::Android, "toString");
-    //TODO
-    return {};
+    if (value.isString()) {
+        return value.toString();
+    } else {
+        return {};
+    }
 }
 
-inline optional<android::Value> toValue(const android::Value& value) {
+inline optional<Value> toValue(const android::Value& value) {
     Log::Debug(mbgl::Event::Android, "toValue");
-    //TODO
-    return {};
+    if (value.isBool()) {
+        return { value.toBool() };
+    } else if (value.isString()) {
+        return { value.toString() };
+    } else if (value.isNumber()) {
+       return { value.toNumber() };
+    } else {
+        return {};
+    }
 }
 
 } // namespace conversion

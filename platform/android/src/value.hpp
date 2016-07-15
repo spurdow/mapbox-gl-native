@@ -2,6 +2,8 @@
 
 #include <jni/jni.hpp>
 
+#include <string>
+
 namespace mbgl {
 namespace android {
 
@@ -14,6 +16,13 @@ public:
     bool isNull() const;
     bool isArray() const;
     bool isObject() const;
+    bool isString() const;
+    bool isBool() const;
+    bool isNumber() const;
+
+    std::string toString() const;
+    float toNumber() const;
+    bool toBool() const;
 
     jni::JNIEnv& jenv;
     jni::jobject* value;

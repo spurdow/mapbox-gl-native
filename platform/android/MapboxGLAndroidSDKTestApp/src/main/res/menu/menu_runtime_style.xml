@@ -14,4 +14,8 @@
         android:id="@+id/action_road_avoid_edges"
         android:title="Set road symbol placement to Point"
         mapbox:showAsAction="never"/>
+    <item
+        android:id="@+id/action_layer_visibility"
+        android:title="Set layer visibility to false"
+        mapbox:showAsAction="never"/>
 </menu>

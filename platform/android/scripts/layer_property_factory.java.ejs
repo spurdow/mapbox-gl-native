@@ -14,6 +14,10 @@ import android.support.annotation.ColorInt;
  */
 public class PropertyFactory {
 
+    public static Property<Boolean> visibility(Boolean visible) {
+        return new Property<>("visibility", visible);
+    }
+
 <% for (const property of properties) { -%>
 <% if (property.type == 'color') { -%>
     public static Property<String> <%- camelizeWithLeadingLowercase(property.name) %>(@ColorInt int value) {

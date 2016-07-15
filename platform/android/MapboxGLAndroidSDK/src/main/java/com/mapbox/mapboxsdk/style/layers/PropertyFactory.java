@@ -11,6 +11,10 @@ import android.support.annotation.ColorInt;
  */
 public class PropertyFactory {
 
+    public static Property<String> visibility(Boolean visible) {
+        return new Property<>("visibility", visible? "visible": "none");
+    }
+
     public static Property<String> lineCap(@Property.LINE_CAP String value) {
         return new Property<>("line-cap", value);
     }

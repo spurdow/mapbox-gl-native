@@ -110,8 +110,21 @@ public class RuntimeStyleActivity extends AppCompatActivity {
             case R.id.action_road_avoid_edges:
                 setRoadSymbolPlacement();
                 return true;
+            case R.id.action_layer_visibility:
+                setLayerInvisible();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setLayerInvisible() {
+        String[] roadLayers = new String[]{"water"};
+        for (String roadLayer : roadLayers) {
+            Layer layer = mapboxMap.getLayer(roadLayer);
+            if (layer != null) {
+                layer.setLayoutProperty(visibility(false));
+            }
         }
     }
 
@@ -128,7 +141,7 @@ public class RuntimeStyleActivity extends AppCompatActivity {
     private void setBackgroundOpacity() {
         //Get layers to manipulate
         Layer background = mapboxMap.getLayer("background");
-        background.setPaintProperty(backgroundOpacity(0f));
+        background.setPaintProperty(backgroundOpacity(0.2f));
     }
 
     private void setWaterColor() {

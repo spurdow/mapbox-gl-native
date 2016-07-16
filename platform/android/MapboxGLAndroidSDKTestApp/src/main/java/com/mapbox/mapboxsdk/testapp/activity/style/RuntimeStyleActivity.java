@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.NoSuchLayerException;
 import com.mapbox.mapboxsdk.testapp.R;
 
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
@@ -113,6 +114,9 @@ public class RuntimeStyleActivity extends AppCompatActivity {
             case R.id.action_layer_visibility:
                 setLayerInvisible();
                 return true;
+            case R.id.action_remove_layer:
+                removeBuildings();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -129,27 +133,44 @@ public class RuntimeStyleActivity extends AppCompatActivity {
     }
 
     private void setRoadSymbolPlacement() {
-        String[] roadLayers = new String[]{"road-label-small", "road-label-medium", "road-label-large"};
-        for (String roadLayer : roadLayers) {
-            Layer layer = mapboxMap.getLayer(roadLayer);
-            if (layer != null) {
-                layer.setLayoutProperty(symbolPlacement(SYMBOL_PLACEMENT_POINT));
+        //Zoom so that the labels are visible first
+        mapboxMap.animateCamera(CameraUpdateFactory.zoomTo(14), new DefaultCallback() {
+            @Override
+            public void onFinish() {
+                String[] roadLayers = new String[]{"road-label-small", "road-label-medium", "road-label-large"};
+                for (String roadLayer : roadLayers) {
+                    Layer layer = mapboxMap.getLayer(roadLayer);
+                    if (layer != null) {
+                        layer.setLayoutProperty(symbolPlacement(SYMBOL_PLACEMENT_POINT));
+                    }
+                }
             }
-        }
+        });
     }
 
     private void setBackgroundOpacity() {
-        //Get layers to manipulate
         Layer background = mapboxMap.getLayer("background");
-        background.setPaintProperty(backgroundOpacity(0.2f));
+        if (background != null) {
+            background.setPaintProperty(backgroundOpacity(0.2f));
+        }
     }
 
     private void setWaterColor() {
         Layer water = mapboxMap.getLayer("water");
         if (water != null) {
+            water.setLayoutProperty(visibility(true));
             water.setPaintProperty(fillColor(Color.RED));
         } else {
             Toast.makeText(RuntimeStyleActivity.this, "No water layer in this style", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void removeBuildings() {
+        //Zoom to see buildings first
+        try {
+            mapboxMap.removeLayer("building");
+        } catch (NoSuchLayerException e) {
+            Toast.makeText(RuntimeStyleActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -161,6 +182,19 @@ public class RuntimeStyleActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    private static class DefaultCallback implements MapboxMap.CancelableCallback {
+
+        @Override
+        public void onCancel() {
+            //noop
+        }
+
+        @Override
+        public void onFinish() {
+            //noop
         }
     }
 }

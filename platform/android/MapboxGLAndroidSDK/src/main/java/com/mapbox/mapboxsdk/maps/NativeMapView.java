@@ -17,6 +17,7 @@ import com.mapbox.mapboxsdk.geometry.ProjectedMeters;
 import com.mapbox.mapboxsdk.layers.CustomLayer;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.NoSuchLayerException;
 
 import java.util.List;
 
@@ -477,6 +478,10 @@ final class NativeMapView {
         return nativeGetLayer(mNativeMapViewPtr, layerId);
     }
 
+    public void removeLayer(String layerId) throws NoSuchLayerException {
+        nativeRemoveLayer(mNativeMapViewPtr, layerId);
+    }
+
     //
     // Callbacks
     //
@@ -654,5 +659,7 @@ final class NativeMapView {
     private native double[] nativeGetCameraValues(long mNativeMapViewPtr);
 
     private native Layer nativeGetLayer(long mNativeMapViewPtr, String layerId);
+
+    private native void nativeRemoveLayer(long mNativeMapViewPtr, String layerId) throws NoSuchLayerException;
 
 }

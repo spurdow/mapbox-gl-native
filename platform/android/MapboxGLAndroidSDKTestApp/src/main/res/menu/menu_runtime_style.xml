@@ -18,4 +18,8 @@
         android:id="@+id/action_layer_visibility"
         android:title="Set layer visibility to false"
         mapbox:showAsAction="never"/>
+    <item
+        android:id="@+id/action_remove_layer"
+        android:title="Remove buildings layer"
+        mapbox:showAsAction="never"/>
 </menu>

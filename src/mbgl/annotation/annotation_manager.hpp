@@ -67,8 +67,8 @@ private:
     AnnotationID nextID = 0;
 
     using SymbolAnnotationTree = boost::geometry::index::rtree<std::shared_ptr<const SymbolAnnotationImpl>, boost::geometry::index::rstar<16, 4>>;
-    using SymbolAnnotationMap = std::unordered_map<AnnotationID, std::shared_ptr<SymbolAnnotationImpl>>;
-    using ShapeAnnotationMap = std::unordered_map<AnnotationID, std::unique_ptr<ShapeAnnotationImpl>>;
+    using SymbolAnnotationMap = std::map<AnnotationID, std::shared_ptr<SymbolAnnotationImpl>>;
+    using ShapeAnnotationMap = std::map<AnnotationID, std::unique_ptr<ShapeAnnotationImpl>>;
 
     SymbolAnnotationTree symbolTree;
     SymbolAnnotationMap symbolAnnotations;

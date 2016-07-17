@@ -1,5 +1,6 @@
 #include "value.hpp"
 
+#include "java_types.hpp"
 #include <mbgl/platform/log.hpp>
 
 //XXX
@@ -26,31 +27,27 @@ namespace android {
 
     bool Value::isArray() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.isArray()");
-        return false; //TODO dynamic_cast<jni::jarray>(value) != nullptr;
+        return jni::IsInstanceOf(jenv, value, *java::ObjectArray::jclass);
     }
 
     bool Value::isObject() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.isObject()");
-        //TODO, not supported yet
-        return false;
+        return jni::IsInstanceOf(jenv, value, *java::Map::jclass);;
     }
 
     bool Value::isString() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.isString()");
-        static jni::jclass* String = jni::NewGlobalRef(jenv, &jni::FindClass(jenv, "java/lang/String")).release();
-        return jni::IsInstanceOf(jenv, value, *String);
+        return jni::IsInstanceOf(jenv, value, *java::String::jclass);
     }
 
     bool Value::isBool() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.isBool()");
-        static jni::jclass* Boolean = jni::NewGlobalRef(jenv, &jni::FindClass(jenv, "java/lang/Boolean")).release();
-        return jni::IsInstanceOf(jenv, value, *Boolean);
+        return jni::IsInstanceOf(jenv, value, *java::Boolean::jclass);
     }
 
     bool Value::isNumber() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.isNumber()");
-        static jni::jclass* Number = jni::NewGlobalRef(jenv, &jni::FindClass(jenv, "java/lang/Number")).release();
-        return jni::IsInstanceOf(jenv, value, *Number);
+        return jni::IsInstanceOf(jenv, value, *java::Number::jclass);
     }
 
     std::string Value::toString() const {
@@ -61,18 +58,12 @@ namespace android {
 
     float Value::toNumber() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.toNumber()");
-        static jni::jclass* Number = jni::NewGlobalRef(jenv, &jni::FindClass(jenv, "java/lang/Number")).release();
-        static jni::jmethodID& floatValueMethodId = jni::GetMethodID(jenv, *Number, "floatValue", "()F");
-
-        return jni::CallMethod<jni::jfloat>(jenv, value, floatValueMethodId);
+        return jni::CallMethod<jni::jfloat>(jenv, value, *java::Number::floatValueMethodId);
     }
 
     bool Value::toBool() const {
         mbgl::Log::Debug(mbgl::Event::JNI, "Value.toBool()");
-        static jni::jclass* Boolean = jni::NewGlobalRef(jenv, &jni::FindClass(jenv, "java/lang/Boolean")).release();
-        static jni::jmethodID& booleanValueMethodId = jni::GetMethodID(jenv, *Boolean, "booleanValue", "()Z");
-
-        return jni::CallMethod<jni::jboolean>(jenv, value, booleanValueMethodId);
+        return jni::CallMethod<jni::jboolean>(jenv, value, *java::Boolean::booleanValueMethodId);
     }
 }
 }

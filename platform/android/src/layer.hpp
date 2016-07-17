@@ -16,10 +16,10 @@ public:
 
     static constexpr auto Name() { return "com/mapbox/mapboxsdk/style/layers/Layer"; };
 
-                                                 /**
-                                                  * Register the native class
-                                                  */
-                                                 static void registerNative(jni::JNIEnv&);
+     /**
+      * Register the native class
+      */
+     static void registerNative(jni::JNIEnv&);
 
     /*
      * Called when a Java object is created on the c++ side

@@ -9,6 +9,7 @@
 #include <sys/system_properties.h>
 
 #include "jni.hpp"
+#include "java_types.hpp"
 #include "native_map_view.hpp"
 #include "layer.hpp"
 
@@ -1580,7 +1581,8 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     mbgl::android::RegisterNativeHTTPRequest(env);
 
-    mbgl::android::Layer::registerNative(env);
+    java::registerNatives(env);
+    Layer::registerNative(env);
 
     latLngClass = &jni::FindClass(env, "com/mapbox/mapboxsdk/geometry/LatLng");
     latLngClass = jni::NewGlobalRef(env, latLngClass).release();

@@ -27,6 +27,7 @@
       'sources': [
         'src/native_map_view.cpp',
         'src/jni.cpp',
+        'src/java_types.cpp',
         'src/attach_env.cpp',
         'src/log_android.cpp',
         'src/http_file_source.cpp',

@@ -5,7 +5,6 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,22 +20,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.MarkerView;
 import com.mapbox.mapboxsdk.annotations.MarkerViewManager;
 import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.testapp.R;
+import com.mapbox.mapboxsdk.testapp.model.annotations.CircleMarkerView;
+import com.mapbox.mapboxsdk.testapp.model.annotations.CircleMarkerViewOptions;
 import com.mapbox.mapboxsdk.testapp.model.annotations.CountryMarkerView;
-import com.mapbox.mapboxsdk.testapp.model.annotations.CountryMarkerViewOptions;
 import com.mapbox.mapboxsdk.testapp.model.annotations.TextMarkerView;
-import com.mapbox.mapboxsdk.testapp.model.annotations.TextMarkerViewOptions;
+import com.mapbox.mapboxsdk.testapp.model.ui.CircleView;
 
 import java.util.Random;
 
@@ -83,54 +82,62 @@ public class MarkerViewActivity extends AppCompatActivity {
                 mMapboxMap = mapboxMap;
 
                 final MarkerViewManager markerViewManager = mapboxMap.getMarkerViewManager();
-
-                Icon usFlag = IconFactory.getInstance(MarkerViewActivity.this)
-                        .fromResource(R.drawable.ic_us);
-
-                // add default ViewMarker markers
-                for (int i = 0; i < LAT_LNGS.length; i++) {
-                    mMapboxMap.addMarker(new MarkerViewOptions()
-                            .position(LAT_LNGS[i])
-                            .title(String.valueOf(i))
-                            .alpha(0.5f)
-                            .icon(usFlag)
-                    );
-                }
+//
+//                Icon usFlag = IconFactory.getInstance(MarkerViewActivity.this)
+//                        .fromResource(R.drawable.ic_us);
+//
+//                // add default ViewMarker markers
+//                for (int i = 0; i < LAT_LNGS.length; i++) {
+//                    mMapboxMap.addMarker(new MarkerViewOptions()
+//                            .position(LAT_LNGS[i])
+//                            .title(String.valueOf(i))
+//                            .alpha(0.5f)
+//                            .icon(usFlag)
+//                    );
+//                }
 
                 // add custom ViewMarker
-                CountryMarkerViewOptions options = new CountryMarkerViewOptions();
-                options.flagRes(R.drawable.icon_burned);
-                options.abbrevName("Mapbox");
-                options.title("Hello");
+//                CountryMarkerViewOptions options = new CountryMarkerViewOptions();
+//                options.flagRes(R.drawable.icon_burned);
+//                options.abbrevName("Mapbox");
+//                options.title("Hello");
+//                options.position(new LatLng(38.899774, -77.023237));
+//                options.flat(true);
+//                mapboxMap.addMarker(options);
+
+                CircleMarkerViewOptions options = new CircleMarkerViewOptions();
+                options.radius(25);
+                options.color(getResources().getColor(R.color.accent));
                 options.position(new LatLng(38.899774, -77.023237));
+                options.title("Test Circle");
                 options.flat(true);
-                mapboxMap.addMarker(options);
+                mMapboxMap.addMarker(options);
 
-                mMapboxMap.addMarker(new MarkerOptions()
-                        .title("United States")
-                        .position(new LatLng(38.902580, -77.050102))
-                );
-
-                mMapboxMap.addMarker(new TextMarkerViewOptions()
-                        .text("A")
-                        .position(new LatLng(38.889876, -77.008849))
-                );
-
-                mMapboxMap.addMarker(new TextMarkerViewOptions()
-                        .text("B")
-                        .position(new LatLng(38.907327, -77.041293))
-                );
-
-                mMapboxMap.addMarker(new TextMarkerViewOptions()
-                        .text("C")
-                        .position(new LatLng(38.897642, -77.041980))
-                );
+//                mMapboxMap.addMarker(new MarkerOptions()
+//                        .title("United States")
+//                        .position(new LatLng(38.902580, -77.050102))
+//                );
+//
+//                mMapboxMap.addMarker(new TextMarkerViewOptions()
+//                        .text("A")
+//                        .position(new LatLng(38.889876, -77.008849))
+//                );
+//
+//                mMapboxMap.addMarker(new TextMarkerViewOptions()
+//                        .text("B")
+//                        .position(new LatLng(38.907327, -77.041293))
+//                );
+//
+//                mMapboxMap.addMarker(new TextMarkerViewOptions()
+//                        .text("C")
+//                        .position(new LatLng(38.897642, -77.041980))
+//                );
 
                 // if you want to customise a ViewMarker you need to extend ViewMarker and provide an adapter implementation
                 // set adapters for child classes of ViewMarker
-                markerViewManager.addMarkerViewAdapter(new CountryAdapter(MarkerViewActivity.this, mapboxMap));
-                markerViewManager.addMarkerViewAdapter(new TextAdapter(MarkerViewActivity.this, mapboxMap));
-
+//                markerViewManager.addMarkerViewAdapter(new CountryAdapter(MarkerViewActivity.this, mapboxMap));
+//                markerViewManager.addMarkerViewAdapter(new TextAdapter(MarkerViewActivity.this, mapboxMap));
+                markerViewManager.addMarkerViewAdapter(new CircleMarkerAdapter(MarkerViewActivity.this , mapboxMap));
                 // add a change listener to validate the size of amount of child views
                 mMapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
                     @Override
@@ -224,6 +231,7 @@ public class MarkerViewActivity extends AppCompatActivity {
             }
             viewHolder.flag.setImageResource(marker.getFlagRes());
             viewHolder.abbrev.setText(marker.getAbbrevName());
+
             return convertView;
         }
 
@@ -264,6 +272,60 @@ public class MarkerViewActivity extends AppCompatActivity {
         private static class ViewHolder {
             ImageView flag;
             TextView abbrev;
+        }
+    }
+
+    private static class CircleMarkerAdapter extends MapboxMap.MarkerViewAdapter<CircleMarkerView> implements MapboxMap.OnCameraChangeListener{
+        private LayoutInflater inflater;
+        private MapboxMap mapboxMap;
+        /**
+         * Create an instance of MarkerViewAdapter.
+         *
+         * @param context the context associated to a MapView
+         */
+        public CircleMarkerAdapter(@NonNull Context context, @NonNull MapboxMap mapboxMap) {
+            super(context);
+            this.inflater = LayoutInflater.from(context);
+            this.mapboxMap = mapboxMap;
+            this.mapboxMap.setOnCameraChangeListener(this);
+        }
+
+        @Nullable
+        @Override
+        public View getView(@NonNull CircleMarkerView marker, @NonNull View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = inflater.inflate(R.layout.circle_layout, parent, false);
+                viewHolder.mCircleView = (CircleView) convertView.findViewById(R.id.circle_view);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.mCircleView.setRadius(25);
+            viewHolder.mCircleView.setColor(convertView.getContext().getResources().getColor(R.color.accent));
+            viewHolder.mCircleView.setPosition(marker.getPosition());
+            viewHolder.mCircleView.setMap(mapboxMap);
+
+
+
+
+            return convertView;
+        }
+
+        @Override
+        public void onCameraChange(CameraPosition position) {
+
+        }
+
+        @Override
+        public boolean prepareViewForReuse(@NonNull MarkerView marker, @NonNull View convertView) {
+            this.mapboxMap.setOnCameraChangeListener(null);
+            return super.prepareViewForReuse(marker, convertView);
+        }
+
+        private static class ViewHolder{
+            CircleView mCircleView;
         }
     }
 

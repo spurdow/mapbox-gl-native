@@ -21,4 +21,5 @@
     <string name="style_dark">mapbox://styles/mapbox/dark-v9</string>
     <string name="style_satellite">mapbox://styles/mapbox/satellite-v9</string>
     <string name="style_satellite_streets">mapbox://styles/mapbox/satellite-streets-v9</string>
+    <string name="mapbox_style">mapbox://styles/ccurato/ciqm00bn5000nbonjwxkalde8</string>
 </resources>

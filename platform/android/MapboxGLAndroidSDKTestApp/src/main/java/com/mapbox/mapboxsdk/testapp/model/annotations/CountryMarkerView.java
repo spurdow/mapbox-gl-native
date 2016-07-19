@@ -21,4 +21,6 @@ public class CountryMarkerView extends MarkerView {
     public int getFlagRes() {
         return flagRes;
     }
+
+
 }

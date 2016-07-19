@@ -25,7 +25,7 @@ public class MarkerViewScaleActivity extends AppCompatActivity {
 
     private MapView mMapView;
     private View mMarkerView;
-
+    private MapboxMap mMapboxMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +49,7 @@ public class MarkerViewScaleActivity extends AppCompatActivity {
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
+                mMapboxMap = mapboxMap;
                 Icon icon = IconFactory.getInstance(MarkerViewScaleActivity.this)
                         .fromResource(R.drawable.ic_circle);
 
@@ -113,6 +114,7 @@ public class MarkerViewScaleActivity extends AppCompatActivity {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            
             float newScale = getScale(progress);
             xText.setText(String.format(Locale.US, "Scale: %.1f", newScale));
             if (MarkerViewScaleActivity.this.mMarkerView != null) {
@@ -133,6 +135,7 @@ public class MarkerViewScaleActivity extends AppCompatActivity {
         }
 
         private float getScale(int progress) {
+
             float scale = 1.0f * progress / 25;
             return scale < 1.0 ? 1.0f : scale;
         }

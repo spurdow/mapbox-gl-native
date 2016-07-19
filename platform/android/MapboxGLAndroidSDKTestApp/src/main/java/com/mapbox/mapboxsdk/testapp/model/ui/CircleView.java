@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -15,9 +16,10 @@ import com.mapbox.mapboxsdk.maps.Projection;
  * Created by android on 7/19/16.
  */
 public class CircleView extends View {
+    private static final String TAG = CircleView.class.getSimpleName();
     private int mColor;
     private int mRadius = 25;
-    private float mProjectedRadius;
+    private float mProjectedRadius = 100;
     private LatLng mPosition = new LatLng(0 , 0);
     private Paint mCirclePaint;
     private MapboxMap mMap;
@@ -54,8 +56,10 @@ public class CircleView extends View {
             Projection projection = mMap.getProjection();
             mCoords = projection.toScreenLocation(mPosition);
             mProjectedRadius = (float) (mRadius / projection.getMetersPerPixelAtLatitude(mPosition.getLatitude()));
-            mCirclePaint.setAlpha(120);
+//            mCirclePaint.setAlpha(120);
             canvas.drawCircle(mCoords.x, mCoords.y, mProjectedRadius, mCirclePaint);
+
+            Log.w(TAG , "Drawing..." + mCoords.x + " " + mCoords.y  + " " +mProjectedRadius );
         }
     }
 

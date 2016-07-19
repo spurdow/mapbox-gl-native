@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
 
-    <com.mapbox.mapboxsdk.testapp.model.ui.CircleView
+
+    <com.github.nicolausyes.circleview.CircleView
         android:id="@+id/circle_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:cv_color="#FFCA28"
+        app:cv_border="true"
+        app:cv_borderColor="#FF2074b9"
+        app:cv_borderWidth="1dp"
+        app:cv_selectable="true"
+        app:cv_selectColor="#E040FB"
+        app:cv_selectBorderColor="#18FFFF"
+        app:cv_selectBorderWidth="1dp" />
 </LinearLayout>

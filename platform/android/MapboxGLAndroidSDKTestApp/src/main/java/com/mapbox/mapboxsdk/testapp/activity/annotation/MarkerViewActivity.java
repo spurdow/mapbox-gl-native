@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +37,7 @@ import com.mapbox.mapboxsdk.testapp.model.annotations.CircleMarkerView;
 import com.mapbox.mapboxsdk.testapp.model.annotations.CircleMarkerViewOptions;
 import com.mapbox.mapboxsdk.testapp.model.annotations.CountryMarkerView;
 import com.mapbox.mapboxsdk.testapp.model.annotations.TextMarkerView;
-import com.mapbox.mapboxsdk.testapp.model.ui.CircleView;
+import com.nicolausyes.circleview.CircleView;
 
 import java.util.Random;
 
@@ -43,6 +45,8 @@ public class MarkerViewActivity extends AppCompatActivity {
 
     private MapboxMap mMapboxMap;
     private MapView mMapView;
+
+    private CircleMarkerView mCircleMarkerView;
 
     private MarkerView movingMarkerOne, movingMarkerTwo;
     private Random randomAnimator = new Random();
@@ -107,11 +111,11 @@ public class MarkerViewActivity extends AppCompatActivity {
 
                 CircleMarkerViewOptions options = new CircleMarkerViewOptions();
                 options.radius(25);
-                options.color(getResources().getColor(R.color.accent));
+                options.color(Color.parseColor("#C2C2C2"));
                 options.position(new LatLng(38.899774, -77.023237));
                 options.title("Test Circle");
                 options.flat(true);
-                mMapboxMap.addMarker(options);
+                mCircleMarkerView = (CircleMarkerView) mMapboxMap.addMarker(options);
 
 //                mMapboxMap.addMarker(new MarkerOptions()
 //                        .title("United States")
@@ -137,7 +141,7 @@ public class MarkerViewActivity extends AppCompatActivity {
                 // set adapters for child classes of ViewMarker
 //                markerViewManager.addMarkerViewAdapter(new CountryAdapter(MarkerViewActivity.this, mapboxMap));
 //                markerViewManager.addMarkerViewAdapter(new TextAdapter(MarkerViewActivity.this, mapboxMap));
-                markerViewManager.addMarkerViewAdapter(new CircleMarkerAdapter(MarkerViewActivity.this , mapboxMap));
+                markerViewManager.addMarkerViewAdapter(new CircleMarkerAdapter(MarkerViewActivity.this , mapboxMap , mCircleMarkerView));
                 // add a change listener to validate the size of amount of child views
                 mMapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
                     @Override
@@ -197,10 +201,14 @@ public class MarkerViewActivity extends AppCompatActivity {
             if (randomAnimator.nextInt() % 2 == 0) {
                 movingMarkerOne.setPosition(CarLocation.CAR_0_LNGS[i]);
                 movingMarkerOne.setRotation(rotation = rotation + 45);
+
+                mCircleMarkerView.setColor(Color.parseColor("#C2C2C2"));
             } else {
                 movingMarkerTwo.setPosition(CarLocation.CAR_1_LNGS[i]);
                 movingMarkerTwo.setRotation(rotation = rotation + 90);
+                mCircleMarkerView.setColor(Color.parseColor("#C2C2C2"));
             }
+            mMapboxMap.updateMarker(mCircleMarkerView);
             loopMarkerMove();
         }
     }
@@ -276,18 +284,21 @@ public class MarkerViewActivity extends AppCompatActivity {
     }
 
     private static class CircleMarkerAdapter extends MapboxMap.MarkerViewAdapter<CircleMarkerView> implements MapboxMap.OnCameraChangeListener{
+        private static final String TAG = CircleMarkerAdapter.class.getSimpleName();
         private LayoutInflater inflater;
         private MapboxMap mapboxMap;
+        private CircleMarkerView mCircleMarkerView;
         /**
          * Create an instance of MarkerViewAdapter.
          *
          * @param context the context associated to a MapView
          */
-        public CircleMarkerAdapter(@NonNull Context context, @NonNull MapboxMap mapboxMap) {
+        public CircleMarkerAdapter(@NonNull Context context, @NonNull MapboxMap mapboxMap , @NonNull CircleMarkerView mCircleMarkerView) {
             super(context);
             this.inflater = LayoutInflater.from(context);
             this.mapboxMap = mapboxMap;
             this.mapboxMap.setOnCameraChangeListener(this);
+            this.mCircleMarkerView = mCircleMarkerView;
         }
 
         @Nullable
@@ -302,10 +313,10 @@ public class MarkerViewActivity extends AppCompatActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.mCircleView.setRadius(25);
-            viewHolder.mCircleView.setColor(convertView.getContext().getResources().getColor(R.color.accent));
-            viewHolder.mCircleView.setPosition(marker.getPosition());
-            viewHolder.mCircleView.setMap(mapboxMap);
+
+            viewHolder.mCircleView.setColor(Color.parseColor("#C2C2C2"));
+//            viewHolder.mCircleView.setPosition(marker.getPosition());
+//            viewHolder.mCircleView.setMap(mapboxMap);
 
 
 
@@ -315,7 +326,12 @@ public class MarkerViewActivity extends AppCompatActivity {
 
         @Override
         public void onCameraChange(CameraPosition position) {
+            mapboxMap.getMarkerViewManager().getView(mCircleMarkerView);
+            mCircleMarkerView.setRadius(50);
+            mCircleMarkerView.setColor(Color.parseColor("#C2C2C2"));
+            mapboxMap.updateMarker(mCircleMarkerView);
 
+            Log.w(TAG , "Test");
         }
 
         @Override

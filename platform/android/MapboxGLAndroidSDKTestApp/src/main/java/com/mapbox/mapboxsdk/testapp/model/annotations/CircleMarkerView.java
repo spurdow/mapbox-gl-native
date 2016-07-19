@@ -23,4 +23,12 @@ public class CircleMarkerView extends MarkerView {
     public float getRadius() {
         return radius;
     }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
 }

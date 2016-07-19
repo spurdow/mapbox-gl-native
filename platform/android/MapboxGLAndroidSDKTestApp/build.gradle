@@ -78,7 +78,7 @@ dependencies {
     compile(project(':MapboxGLAndroidSDK')) {
         transitive = true
     }
-
+    compile 'com.github.nicolausYes:CircleView:0.1'
     // Support libraries
     compile "com.android.support:support-annotations:${supportLibVersion}"
     compile "com.android.support:support-v4:${supportLibVersion}"
